@@ -7,7 +7,7 @@
 -->
 <full-backup-content>
     <!--
-   <include domain="sharedpref" path="."/>
-   <exclude domain="sharedpref" path="device.xml"/>
+   <include com.sugadev.noteit.domain="sharedpref" path="."/>
+   <exclude com.sugadev.noteit.domain="sharedpref" path="device.xml"/>
 -->
 </full-backup-content>
