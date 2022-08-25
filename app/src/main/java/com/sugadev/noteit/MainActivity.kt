@@ -6,12 +6,18 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.sugadev.noteit.navigation.Route
+import com.sugadev.noteit.ui.screen.home.HomeScreen
 import com.sugadev.noteit.ui.theme.NoteItTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    AppScreen()
                 }
             }
         }
@@ -30,14 +36,22 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun AppScreen() {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = Route.Home.route,
+    ) {
+        composable(route = Route.Home.route) {
+            HomeScreen()
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     NoteItTheme {
-        Greeting("Android")
+
     }
 }
