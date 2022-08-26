@@ -28,4 +28,10 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun insertNote(note: Note) {
+        viewModelScope.launch {
+            noteRepository.insertNote(note)
+        }
+    }
 }
