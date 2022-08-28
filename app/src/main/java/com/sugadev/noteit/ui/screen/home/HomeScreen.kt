@@ -30,7 +30,8 @@ import com.sugadev.noteit.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    onClick: (Note) -> Unit
 ) {
     fun loadNote() {
         homeViewModel.getAllNote()
@@ -57,7 +58,7 @@ fun HomeScreen(
                     LoadingContent()
                 }
                 else -> {
-                    HomeContent(modifier, notes) {}
+                    HomeContent(modifier, notes) { onClick(it) }
                 }
             }
         }
@@ -79,7 +80,7 @@ fun HomeContent(
                 if (it == 0) {
                     AddNewNotes {
                         Log.d("siagust", "Onclick")
-                        onClick.invoke(
+                        onClick(
                             Note(
                                 0,
                                 title = DUMMY_NOTES.random().first,
@@ -94,7 +95,7 @@ fun HomeContent(
                             title = notes.get(it).title ?: "",
                             body = notes.get(it).body ?: "",
                             onClick = {
-                                onClick.invoke(
+                                onClick(
                                     Note(
                                         id = notes.get(it).id,
                                         title = DUMMY_NOTES.random().first,
