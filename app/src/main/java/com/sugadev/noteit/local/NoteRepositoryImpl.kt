@@ -52,8 +52,8 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun insertNote(note: Note) {
         noteDao.insert(
             note = NoteDb(
-                0,
-                note.title,
+                id = note.id ?: 0,
+                title = note.title,
                 body = note.body ?: "",
                 date = note.date ?: 0L
             )
