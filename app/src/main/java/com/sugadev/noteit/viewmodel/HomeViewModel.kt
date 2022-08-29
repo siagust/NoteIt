@@ -29,13 +29,4 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getNoteById(id: Int) {
-
-    }
-
-    fun insertNote(note: Note) {
-        viewModelScope.launch {
-            noteRepository.insertNote(note)
-        }
-    }
 }

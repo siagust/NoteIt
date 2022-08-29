@@ -59,4 +59,8 @@ class NoteRepositoryImpl @Inject constructor(
             )
         )
     }
+
+    override suspend fun removeNote(id: Int) {
+        noteDao.removeNote(id)
+    }
 }

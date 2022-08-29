@@ -34,4 +34,10 @@ class NoteDetailViewModel @Inject constructor(
             noteRepository.insertNote(note)
         }
     }
+
+    fun removeNote(id: Int) {
+        viewModelScope.launch {
+            noteRepository.removeNote(id)
+        }
+    }
 }

@@ -61,6 +61,10 @@ fun NoteDetailScreen(
         if (noteId == 0) {
             NoteDetailContent(Note.EMPTY,
                 onBackPressed = { onBackPressed() },
+                onDeletePressed = {
+                    noteDetailViewModel.removeNote(it)
+                    onBackPressed()
+                },
                 onSavePressed = {
                     noteDetailViewModel.insertNote(it.copy(id = null))
                     onBackPressed()
@@ -73,6 +77,10 @@ fun NoteDetailScreen(
                     NoteDetailContent(
                         notes,
                         onBackPressed = { onBackPressed() },
+                        onDeletePressed = {
+                            noteDetailViewModel.removeNote(it)
+                            onBackPressed()
+                        },
                         onSavePressed = {
                             noteDetailViewModel.insertNote(it)
                             onBackPressed()
@@ -82,6 +90,10 @@ fun NoteDetailScreen(
                     NoteDetailContent(
                         notes,
                         onBackPressed = { onBackPressed() },
+                        onDeletePressed = {
+                            noteDetailViewModel.removeNote(it)
+                            onBackPressed()
+                        },
                         onSavePressed = {
                             noteDetailViewModel.insertNote(it)
                             onBackPressed()
@@ -97,6 +109,7 @@ fun NoteDetailScreen(
 fun NoteDetailContent(
     note: Note,
     onBackPressed: () -> Unit,
+    onDeletePressed: (Int) -> Unit,
     onSavePressed: (Note) -> Unit,
 ) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
@@ -121,6 +134,23 @@ fun NoteDetailContent(
             }
 
             Spacer(modifier = Modifier.weight(1f))
+
+            if (note.id != null) {
+                Card(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
+                        .clickable { onDeletePressed(note.id ?: 0) },
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = 2.dp,
+                    backgroundColor = GrayFill
+                ) {
+                    Text(
+                        text = "Delete",
+                        modifier = Modifier.padding(vertical = 6.dp, horizontal = 12.dp),
+                        style = Typography.body1
+                    )
+                }
+            }
 
             Card(
                 modifier = Modifier
