@@ -1,6 +1,5 @@
 package com.sugadev.noteit.ui.screen.home
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -55,7 +54,7 @@ fun HomeScreen(
 
             when {
                 notes.isEmpty() -> {
-                    LoadingContent()
+                    HomeContent(modifier, notes) { onClick(it) }
                 }
                 else -> {
                     HomeContent(modifier, notes) { onClick(it) }
@@ -79,7 +78,6 @@ fun HomeContent(
             items(notes.shuffled().size + 1) {
                 if (it == 0) {
                     AddNewNotes {
-                        Log.d("siagust", "Onclick")
                         onClick(
                             Note(
                                 0,
@@ -120,6 +118,7 @@ fun NotesCard(
 ) {
     Column(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(8.dp)
             .background(color = GrayFill, shape = RoundedCornerShape(16.dp))
             .clickable { onClick.invoke() }
@@ -134,12 +133,14 @@ fun NotesText(
     body: String
 ) {
     val textColor = BlackFill
-    Text(
-        text = title,
-        color = textColor,
-        modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 2.dp),
-        style = Typography.subtitle1
-    )
+    if (title.isNotBlank()) {
+        Text(
+            text = title,
+            color = textColor,
+            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 2.dp),
+            style = Typography.subtitle1
+        )
+    }
     Text(
         text = body,
         color = textColor,

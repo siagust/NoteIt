@@ -14,7 +14,8 @@ interface NoteDao {
     @Query("SELECT * FROM notedb WHERE id = :id")
     fun getNoteById(id: Int): NoteDb
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(note: NoteDb)
+
 
 }
