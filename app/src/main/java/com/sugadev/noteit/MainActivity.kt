@@ -61,7 +61,7 @@ fun AppScreen() {
             )) { navBackStackEntry ->
             val noteId = navBackStackEntry.arguments?.getInt("noteId")
             requireNotNull(noteId) { "noteId not found" }
-            NoteDetailScreen(onClick = {})
+            NoteDetailScreen(noteId, onBackPressed = { navController.navigateUp() })
         }
     }
 }

@@ -179,7 +179,7 @@ fun AddNewText(
         text = body,
         color = textColor,
         modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 16.dp),
-        style = Typography.body1
+        style = Typography.body2
     )
 }
 

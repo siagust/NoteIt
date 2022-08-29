@@ -32,6 +32,22 @@ class NoteRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+    override fun getNoteById(id: Int): Flow<Note> = flow {
+        try {
+            emit(Note.EMPTY)
+            val noteDb = noteDao.getNoteById(id = id)
+            emit(
+                Note(
+                    id = noteDb.id,
+                    title = noteDb.title,
+                    body = noteDb.body,
+                    date = noteDb.date
+                )
+            )
+        } catch (e: Exception) {
+            emit(Note.EMPTY)
+        }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun insertNote(note: Note) {
         noteDao.insert(

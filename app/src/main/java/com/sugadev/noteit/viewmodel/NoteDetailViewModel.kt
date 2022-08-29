@@ -12,25 +12,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class NoteDetailViewModel @Inject constructor(
     application: Application,
     private val noteRepository: NoteRepository
 ) :
     AndroidViewModel(application) {
 
-    private val _noteState = mutableStateOf<List<Note>>(listOf())
-    val noteState: State<List<Note>> = _noteState
+    private val _noteState = mutableStateOf<Note>(Note.EMPTY)
+    val noteState: State<Note> = _noteState
 
-    fun getAllNote() {
+    fun getNoteById(id: Int) {
         viewModelScope.launch {
-            noteRepository.getAllNote().collect() {
+            noteRepository.getNoteById(id).collect() {
                 _noteState.value = it
             }
         }
-    }
-
-    fun getNoteById(id: Int) {
-
     }
 
     fun insertNote(note: Note) {
