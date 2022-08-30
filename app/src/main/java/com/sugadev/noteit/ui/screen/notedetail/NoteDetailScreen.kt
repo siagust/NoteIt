@@ -22,15 +22,20 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -114,7 +119,8 @@ fun NoteDetailContent(
 ) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     var typedTitle by remember { mutableStateOf(note.title ?: "") }
-    var typedBody by remember { mutableStateOf(note.body ?: "") }
+    var typedBody by remember { mutableStateOf(TextFieldValue(text = note.body ?: "")) }
+    val focusRequester = remember { FocusRequester() }
 
     Column {
         Row {
@@ -155,7 +161,7 @@ fun NoteDetailContent(
             Card(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
-                    .clickable { onSavePressed(Note(note.id, typedTitle, typedBody, 0L)) },
+                    .clickable { onSavePressed(Note(note.id, typedTitle, typedBody.text, 0L)) },
                 shape = RoundedCornerShape(8.dp),
                 elevation = 2.dp,
                 backgroundColor = GrayFill
@@ -189,11 +195,12 @@ fun NoteDetailContent(
             modifier = Modifier
                 .padding(top = 0.dp, bottom = 16.dp)
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(1f)
+                .focusRequester(focusRequester),
             textStyle = Typography.body1,
             decorationBox = @Composable {
                 TextFieldDecorationBox(
-                    typedBody = typedBody,
+                    typedBody = typedBody.text,
                     innerTextField = it,
                     placeholder = "Body",
                     textStyle = Typography.body1
@@ -206,6 +213,13 @@ fun NoteDetailContent(
                 Modifier
                     .padding(16.dp)
                     .background(GrayFill, shape = RoundedCornerShape(50))
+                    .clickable {
+                        val insertedText = typedBody.text + it
+                        typedBody = TextFieldValue(
+                            text = insertedText,
+                            selection = TextRange(insertedText.length)
+                        )
+                    }
             ) {
                 Text(
                     text = it,
@@ -214,6 +228,10 @@ fun NoteDetailContent(
                     overflow = TextOverflow.Ellipsis
                 )
             }
+        }
+
+        LaunchedEffect(Unit) {
+            if (note.id == null) focusRequester.requestFocus()
         }
 
     }
