@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM notedb")
+    @Query("SELECT * FROM notedb ORDER BY date DESC")
     fun getAllNotes(): List<NoteDb>
 
     @Query("SELECT * FROM notedb WHERE id = :id")

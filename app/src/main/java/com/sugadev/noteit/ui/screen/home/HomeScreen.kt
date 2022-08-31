@@ -75,36 +75,34 @@ fun HomeContent(
             cells = Adaptive(minSize = 180.dp),
             contentPadding = PaddingValues(8.dp)
         ) {
-            items(notes.shuffled().size + 1) {
-                if (it == 0) {
-                    AddNewNotes {
+            item {
+                AddNewNotes {
+                    onClick(
+                        Note(
+                            0,
+                            title = DUMMY_NOTES.random().first,
+                            body = DUMMY_NOTES.random().second,
+                            date = 0L
+                        )
+                    )
+                }
+            }
+
+            items(notes) {
+                NotesCard(
+                    title = it.title ?: "",
+                    body = it.body ?: "",
+                    onClick = {
                         onClick(
                             Note(
-                                0,
+                                id = it.id,
                                 title = DUMMY_NOTES.random().first,
                                 body = DUMMY_NOTES.random().second,
                                 date = 0L
                             )
                         )
                     }
-                } else {
-                    if (it != notes.size) {
-                        NotesCard(
-                            title = notes.get(it).title ?: "",
-                            body = notes.get(it).body ?: "",
-                            onClick = {
-                                onClick(
-                                    Note(
-                                        id = notes.get(it).id,
-                                        title = DUMMY_NOTES.random().first,
-                                        body = DUMMY_NOTES.random().second,
-                                        date = 0L
-                                    )
-                                )
-                            }
-                        )
-                    }
-                }
+                )
             }
         }
     }

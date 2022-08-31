@@ -45,6 +45,7 @@ import com.sugadev.noteit.domain.model.Note
 import com.sugadev.noteit.ui.theme.GrayFill
 import com.sugadev.noteit.ui.theme.Typography
 import com.sugadev.noteit.viewmodel.NoteDetailViewModel
+import java.util.Calendar
 
 @Composable
 fun NoteDetailScreen(
@@ -161,7 +162,16 @@ fun NoteDetailContent(
             Card(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
-                    .clickable { onSavePressed(Note(note.id, typedTitle, typedBody.text, 0L)) },
+                    .clickable {
+                        onSavePressed(
+                            Note(
+                                note.id,
+                                typedTitle,
+                                typedBody.text,
+                                Calendar.getInstance().timeInMillis
+                            )
+                        )
+                    },
                 shape = RoundedCornerShape(8.dp),
                 elevation = 2.dp,
                 backgroundColor = GrayFill
