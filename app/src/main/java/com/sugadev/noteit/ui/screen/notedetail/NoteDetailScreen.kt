@@ -128,6 +128,7 @@ fun NoteDetailScreen(
     }
 }
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun NoteDetailContent(
     onBackPressed: () -> Unit,
