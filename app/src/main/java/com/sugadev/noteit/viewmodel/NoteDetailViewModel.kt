@@ -1,12 +1,9 @@
 package com.sugadev.noteit.viewmodel
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
-import com.sugadev.noteit.domain.model.Note
 import com.sugadev.noteit.domain.repository.NoteRepository
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Delete
@@ -18,7 +15,6 @@ import com.sugadev.noteit.ui.screen.notedetail.NoteDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Calendar
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
@@ -31,17 +27,13 @@ class NoteDetailViewModel @Inject constructor(
 ) :
     BaseViewModel<NoteDetailState, NoteDetailAction, NoteDetailEffect>(NoteDetailState.INITIAL) {
 
-    private val _noteState = mutableStateOf<Note>(Note.EMPTY)
-    val noteState: State<Note> = _noteState
-    private val _typedNote = MutableStateFlow(Note.EMPTY)
-
     init {
         viewModelScope.launch {
             @OptIn(FlowPreview::class)
             state.debounce(1000)
                 .drop(1)
                 .collect {
-                    insertNote(it)
+                    saveNote()
                 }
         }
     }
@@ -67,8 +59,9 @@ class NoteDetailViewModel @Inject constructor(
         }
     }
 
-    fun insertNote(state: NoteDetailState) {
+    fun saveNote() {
         viewModelScope.launch {
+            val state = state.value
             if (state.bodyTextFieldValue.text.isNotBlank()) {
                 noteRepository.insertNote(
                     state.note.copy(
@@ -99,25 +92,13 @@ class NoteDetailViewModel @Inject constructor(
         }
     }
 
-    fun updateTypedNote(note: Note) {
-        _typedNote.value = _typedNote.value.copy(title = note.title, body = note.body)
-    }
-
-    fun saveNote() {
-        viewModelScope.launch {
-            _typedNote.collect() {
-                insertNote(state.value)
-            }
-        }
-    }
-
     override fun setAction(action: NoteDetailAction) {
         when (action) {
             Delete -> {
 
             }
             Save -> {
-                insertNote(state.value)
+                saveNote()
             }
             is UpdateTitle -> {
                 setState {
