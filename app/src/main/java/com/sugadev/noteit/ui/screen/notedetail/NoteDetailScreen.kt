@@ -42,11 +42,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
-import com.sugadev.noteit.domain.model.Note
 import com.sugadev.noteit.ui.theme.GrayFill
 import com.sugadev.noteit.ui.theme.Typography
 import com.sugadev.noteit.viewmodel.NoteDetailViewModel
-import java.util.Calendar
 
 @Composable
 fun NoteDetailScreen(
@@ -70,61 +68,17 @@ fun NoteDetailScreen(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
     ) {
-        if (noteId == 0) {
-            NoteDetailContent(
-                onBackPressed = {
-                    noteDetailViewModel.saveNote()
-                    onBackPressed()
-                },
-                onDeletePressed = {
-                    noteDetailViewModel.removeNote(it)
-                    onBackPressed()
-                },
-                onSavePressed = {
-                    noteDetailViewModel.saveNote()
-                    onBackPressed()
-                },
-                noteDetailViewModel = noteDetailViewModel
-            )
-        } else {
-            val notes = noteDetailViewModel.noteState.value
-            when (notes.id) {
-                null -> {
-                    NoteDetailContent(
-                        onBackPressed = {
-                            noteDetailViewModel.saveNote()
-                            onBackPressed()
-                        },
-                        onDeletePressed = {
-                            noteDetailViewModel.removeNote(it)
-                            onBackPressed()
-                        },
-                        onSavePressed = {
-                            noteDetailViewModel.saveNote()
-                            onBackPressed()
-                        },
-                        noteDetailViewModel = noteDetailViewModel
-                    )
-                }
-                else -> {
-                    NoteDetailContent(
-                        onBackPressed = {
-                            noteDetailViewModel.saveNote()
-                            onBackPressed()
-                        },
-                        onDeletePressed = {
-                            noteDetailViewModel.removeNote(it)
-                            onBackPressed()
-                        },
-                        onSavePressed = {
-                            noteDetailViewModel.saveNote()
-                            onBackPressed()
-                        },
-                        noteDetailViewModel = noteDetailViewModel
-                    )
-                }
-            }
-        }
+        NoteDetailContent(
+            onBackPressed = {
+                noteDetailViewModel.saveNote()
+                onBackPressed()
+            },
+            onDeletePressed = {
+                noteDetailViewModel.removeNote(it)
+                onBackPressed()
+            },
+            noteDetailViewModel = noteDetailViewModel
+        )
     }
 }
 
@@ -133,7 +87,6 @@ fun NoteDetailScreen(
 fun NoteDetailContent(
     onBackPressed: () -> Unit,
     onDeletePressed: (Int) -> Unit,
-    onSavePressed: (Note) -> Unit,
     noteDetailViewModel: NoteDetailViewModel
 ) {
     val state by noteDetailViewModel.state.collectAsStateWithLifecycle()
@@ -175,30 +128,6 @@ fun NoteDetailContent(
                         style = Typography.body1
                     )
                 }
-            }
-
-            Card(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
-                    .clickable {
-                        onSavePressed(
-                            Note(
-                                state.note.id,
-                                state.titleTextFieldValue.text,
-                                state.bodyTextFieldValue.text,
-                                Calendar.getInstance().timeInMillis
-                            )
-                        )
-                    },
-                shape = RoundedCornerShape(8.dp),
-                elevation = 2.dp,
-                backgroundColor = GrayFill
-            ) {
-                Text(
-                    text = "Save",
-                    modifier = Modifier.padding(vertical = 6.dp, horizontal = 12.dp),
-                    style = Typography.body1
-                )
             }
         }
         BasicTextField(
