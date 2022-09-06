@@ -1,7 +1,8 @@
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
 
 package com.sugadev.noteit.ui.screen.notedetail
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,9 +25,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -40,6 +39,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
 import com.sugadev.noteit.domain.model.Note
 import com.sugadev.noteit.ui.theme.GrayFill
@@ -60,50 +61,66 @@ fun NoteDetailScreen(
 
     loadNote()
 
+    BackHandler {
+        noteDetailViewModel.saveNote()
+        onBackPressed()
+    }
+
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
     ) {
         if (noteId == 0) {
-            NoteDetailContent(Note.EMPTY,
-                onBackPressed = { onBackPressed() },
+            NoteDetailContent(
+                onBackPressed = {
+                    noteDetailViewModel.saveNote()
+                    onBackPressed()
+                },
                 onDeletePressed = {
                     noteDetailViewModel.removeNote(it)
                     onBackPressed()
                 },
                 onSavePressed = {
-                    noteDetailViewModel.insertNote(it.copy(id = null))
+                    noteDetailViewModel.saveNote()
                     onBackPressed()
-                }
+                },
+                noteDetailViewModel = noteDetailViewModel
             )
         } else {
             val notes = noteDetailViewModel.noteState.value
             when (notes.id) {
                 null -> {
                     NoteDetailContent(
-                        notes,
-                        onBackPressed = { onBackPressed() },
+                        onBackPressed = {
+                            noteDetailViewModel.saveNote()
+                            onBackPressed()
+                        },
                         onDeletePressed = {
                             noteDetailViewModel.removeNote(it)
                             onBackPressed()
                         },
                         onSavePressed = {
-                            noteDetailViewModel.insertNote(it)
+                            noteDetailViewModel.saveNote()
                             onBackPressed()
-                        })
+                        },
+                        noteDetailViewModel = noteDetailViewModel
+                    )
                 }
                 else -> {
                     NoteDetailContent(
-                        notes,
-                        onBackPressed = { onBackPressed() },
+                        onBackPressed = {
+                            noteDetailViewModel.saveNote()
+                            onBackPressed()
+                        },
                         onDeletePressed = {
                             noteDetailViewModel.removeNote(it)
                             onBackPressed()
                         },
                         onSavePressed = {
-                            noteDetailViewModel.insertNote(it)
+                            noteDetailViewModel.saveNote()
                             onBackPressed()
-                        }
+                        },
+                        noteDetailViewModel = noteDetailViewModel
                     )
                 }
             }
@@ -113,14 +130,14 @@ fun NoteDetailScreen(
 
 @Composable
 fun NoteDetailContent(
-    note: Note,
     onBackPressed: () -> Unit,
     onDeletePressed: (Int) -> Unit,
     onSavePressed: (Note) -> Unit,
+    noteDetailViewModel: NoteDetailViewModel
 ) {
+    val state by noteDetailViewModel.state.collectAsStateWithLifecycle()
+
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
-    var typedTitle by remember { mutableStateOf(note.title ?: "") }
-    var typedBody by remember { mutableStateOf(TextFieldValue(text = note.body ?: "")) }
     val focusRequester = remember { FocusRequester() }
 
     Column {
@@ -142,11 +159,11 @@ fun NoteDetailContent(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            if (note.id != null) {
+            if (state.note.id != null) {
                 Card(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
-                        .clickable { onDeletePressed(note.id ?: 0) },
+                        .clickable { onDeletePressed(state.note.id ?: 0) },
                     shape = RoundedCornerShape(8.dp),
                     elevation = 2.dp,
                     backgroundColor = GrayFill
@@ -165,9 +182,9 @@ fun NoteDetailContent(
                     .clickable {
                         onSavePressed(
                             Note(
-                                note.id,
-                                typedTitle,
-                                typedBody.text,
+                                state.note.id,
+                                state.titleTextFieldValue.text,
+                                state.bodyTextFieldValue.text,
                                 Calendar.getInstance().timeInMillis
                             )
                         )
@@ -184,15 +201,15 @@ fun NoteDetailContent(
             }
         }
         BasicTextField(
-            value = typedTitle,
-            onValueChange = { typedTitle = it },
+            value = state.titleTextFieldValue,
+            onValueChange = { noteDetailViewModel.setAction(NoteDetailAction.UpdateTitle(it)) },
             modifier = Modifier
                 .padding(top = 8.dp, bottom = 0.dp)
                 .fillMaxWidth(),
             textStyle = Typography.h1,
             decorationBox = @Composable {
                 TextFieldDecorationBox(
-                    typedBody = typedTitle,
+                    typedBody = state.titleTextFieldValue.text,
                     innerTextField = it,
                     placeholder = "Title",
                     textStyle = Typography.h1
@@ -200,8 +217,10 @@ fun NoteDetailContent(
             }
         )
         BasicTextField(
-            value = typedBody,
-            onValueChange = { typedBody = it },
+            value = state.bodyTextFieldValue,
+            onValueChange = {
+                noteDetailViewModel.setAction(NoteDetailAction.UpdateBody(it))
+            },
             modifier = Modifier
                 .padding(top = 0.dp, bottom = 16.dp)
                 .fillMaxWidth()
@@ -210,7 +229,7 @@ fun NoteDetailContent(
             textStyle = Typography.body1,
             decorationBox = @Composable {
                 TextFieldDecorationBox(
-                    typedBody = typedBody.text,
+                    typedBody = state.bodyTextFieldValue.text,
                     innerTextField = it,
                     placeholder = "Body",
                     textStyle = Typography.body1
@@ -224,10 +243,14 @@ fun NoteDetailContent(
                     .padding(16.dp)
                     .background(GrayFill, shape = RoundedCornerShape(50))
                     .clickable {
-                        val insertedText = typedBody.text + it
-                        typedBody = TextFieldValue(
-                            text = insertedText,
-                            selection = TextRange(insertedText.length)
+                        val insertedText = state.bodyTextFieldValue.text + it
+                        noteDetailViewModel.setAction(
+                            NoteDetailAction.UpdateBody(
+                                TextFieldValue(
+                                    text = insertedText,
+                                    selection = TextRange(insertedText.length)
+                                )
+                            )
                         )
                     }
             ) {
@@ -241,7 +264,7 @@ fun NoteDetailContent(
         }
 
         LaunchedEffect(Unit) {
-            if (note.id == null) focusRequester.requestFocus()
+            if (state.note.id == null) focusRequester.requestFocus()
         }
 
     }

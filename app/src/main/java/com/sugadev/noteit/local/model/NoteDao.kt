@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
@@ -12,10 +13,10 @@ interface NoteDao {
     fun getAllNotes(): List<NoteDb>
 
     @Query("SELECT * FROM notedb WHERE id = :id")
-    fun getNoteById(id: Int): NoteDb
+    fun getNoteById(id: Int): Flow<NoteDb>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(note: NoteDb)
+    fun insert(note: NoteDb): Long
 
     @Query("DELETE FROM notedb WHERE id = :id")
     suspend fun removeNote(id: Int)
