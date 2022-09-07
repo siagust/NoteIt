@@ -44,14 +44,14 @@ class NoteDetailViewModel @Inject constructor(
                 setState {
                     copy(
                         note = it,
-                        isAddNew = it.id != null,
+                        isAddNew = it.id == null,
                         bodyTextFieldValue = TextFieldValue(
                             text = it.body ?: "",
                             selection = TextRange(it.body?.length ?: 0)
                         ),
                         titleTextFieldValue = TextFieldValue(
                             text = it.title ?: "",
-                            selection = TextRange(it.body?.length ?: 0)
+                            selection = TextRange(it.title?.length ?: 0)
                         )
                     )
                 }

@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Agus Triyono/AndroidStudioProjects/NoteIt/app/src/main/res/drawable/bubble_background.xml" value="0.1" />
         <entry key="..\:/Users/Agus Triyono/AndroidStudioProjects/NoteIt/app/src/main/res/drawable/ic_chevron_back_svgrepo_com.xml" value="0.212" />
+        <entry key="..\:/Users/Agus Triyono/AndroidStudioProjects/NoteIt/app/src/main/res/layout/layout_chat_head.xml" value="0.1778115501519757" />
       </map>
     </option>
   </component>

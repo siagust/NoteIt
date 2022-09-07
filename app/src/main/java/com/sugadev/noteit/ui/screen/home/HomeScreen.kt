@@ -5,8 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -14,6 +16,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
@@ -121,6 +124,7 @@ fun NotesCard(
             .background(color = GrayFill, shape = RoundedCornerShape(16.dp))
             .clickable { onClick.invoke() }
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
         NotesText(title, body)
     }
 }
@@ -135,15 +139,17 @@ fun NotesText(
         Text(
             text = title,
             color = textColor,
-            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 2.dp),
+            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 0.dp, bottom = 4.dp),
             style = Typography.subtitle1
         )
     }
     Text(
         text = body,
         color = textColor,
-        modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 2.dp, bottom = 16.dp),
-        style = Typography.body1
+        modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 0.dp, bottom = 16.dp),
+        style = Typography.body1,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 12
     )
 }
 

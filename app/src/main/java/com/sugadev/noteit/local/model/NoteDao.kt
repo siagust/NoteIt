@@ -13,7 +13,7 @@ interface NoteDao {
     fun getAllNotes(): List<NoteDb>
 
     @Query("SELECT * FROM notedb WHERE id = :id")
-    fun getNoteById(id: Int): Flow<NoteDb>
+    fun getNoteById(id: Int): Flow<NoteDb?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(note: NoteDb): Long

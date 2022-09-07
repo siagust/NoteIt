@@ -1,5 +1,6 @@
 package com.sugadev.noteit
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,16 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
-import androidx.navigation.NavType.Companion
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.sugadev.noteit.base.service.ChatHeadService
 import com.sugadev.noteit.navigation.Route
 import com.sugadev.noteit.ui.screen.home.HomeScreen
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailScreen
 import com.sugadev.noteit.ui.theme.NoteItTheme
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -36,6 +38,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        stopService(Intent(this@MainActivity, ChatHeadService::class.java))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        startService(Intent(this@MainActivity, ChatHeadService::class.java))
     }
 }
 

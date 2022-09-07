@@ -193,8 +193,10 @@ fun NoteDetailContent(
             }
         }
 
-        LaunchedEffect(Unit) {
-            if (state.note.id == null) focusRequester.requestFocus()
+        if (state.isAddNew) {
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+            }
         }
 
     }

@@ -11,6 +11,6 @@ data class NoteDetailState(
 ) {
     companion object {
         val INITIAL =
-            NoteDetailState(Note.EMPTY, true, TextFieldValue(text = ""), TextFieldValue(text = ""))
+            NoteDetailState(Note.EMPTY, false, TextFieldValue(text = ""), TextFieldValue(text = ""))
     }
 }
