@@ -42,8 +42,8 @@ class MainActivity : ComponentActivity() {
         stopService(Intent(this@MainActivity, ChatHeadService::class.java))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         startService(Intent(this@MainActivity, ChatHeadService::class.java))
     }
 }
