@@ -7,6 +7,7 @@ import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.domain.repository.NoteRepository
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Delete
+import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.LoadNote
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Save
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.UpdateBody
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.UpdateTitle
@@ -38,7 +39,7 @@ class NoteDetailViewModel @Inject constructor(
         }
     }
 
-    fun getNoteById(id: Int) {
+    private fun loadNote(id: Int) {
         viewModelScope.launch {
             noteRepository.getNoteById(id).take(1).collect() {
                 setState {
@@ -59,7 +60,7 @@ class NoteDetailViewModel @Inject constructor(
         }
     }
 
-    fun saveNote() {
+    private fun saveNote() {
         viewModelScope.launch {
             val state = state.value
             if (state.bodyTextFieldValue.text.isNotBlank()) {
@@ -86,16 +87,21 @@ class NoteDetailViewModel @Inject constructor(
         }
     }
 
-    fun removeNote(id: Int) {
-        viewModelScope.launch {
-            noteRepository.removeNote(id)
+    private fun removeNote() {
+        state.value.note.id?.let {
+            viewModelScope.launch {
+                noteRepository.removeNote(it)
+            }
         }
     }
 
     override fun setAction(action: NoteDetailAction) {
         when (action) {
+            is LoadNote -> {
+                loadNote(action.id)
+            }
             Delete -> {
-
+                removeNote()
             }
             Save -> {
                 saveNote()

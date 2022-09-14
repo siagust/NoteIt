@@ -3,6 +3,7 @@ package com.sugadev.noteit.ui.screen.notedetail
 import androidx.compose.ui.text.input.TextFieldValue
 
 sealed interface NoteDetailAction {
+    data class LoadNote(val id: Int) : NoteDetailAction
     object Save : NoteDetailAction
     object Delete : NoteDetailAction
     data class UpdateTitle(val textFieldValue: TextFieldValue) : NoteDetailAction

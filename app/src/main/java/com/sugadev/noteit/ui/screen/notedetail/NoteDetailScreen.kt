@@ -42,6 +42,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
+import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Delete
+import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.LoadNote
+import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Save
 import com.sugadev.noteit.ui.theme.GrayFill
 import com.sugadev.noteit.ui.theme.Typography
 import com.sugadev.noteit.viewmodel.NoteDetailViewModel
@@ -54,13 +57,13 @@ fun NoteDetailScreen(
     onBackPressed: () -> Unit
 ) {
     fun loadNote() {
-        noteDetailViewModel.getNoteById(noteId)
+        noteDetailViewModel.setAction(LoadNote(noteId))
     }
 
     loadNote()
 
     BackHandler {
-        noteDetailViewModel.saveNote()
+        noteDetailViewModel.setAction(Save)
         onBackPressed()
     }
 
@@ -70,11 +73,11 @@ fun NoteDetailScreen(
     ) {
         NoteDetailContent(
             onBackPressed = {
-                noteDetailViewModel.saveNote()
+                noteDetailViewModel.setAction(Save)
                 onBackPressed()
             },
             onDeletePressed = {
-                noteDetailViewModel.removeNote(it)
+                noteDetailViewModel.setAction(Delete)
                 onBackPressed()
             },
             noteDetailViewModel = noteDetailViewModel

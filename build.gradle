@@ -8,6 +8,7 @@ buildscript {
         classpath libs.android.gradlePlugin
         classpath libs.jetbrains.kotlin.gradlePlugin
         classpath libs.google.hilt.gradlePlugin
+        classpath libs.google.services
     }
 
 }
