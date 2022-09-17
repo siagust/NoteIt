@@ -27,7 +27,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.ClipboardManager
@@ -194,30 +196,42 @@ fun BulletShortcut(
     state: NoteDetailState,
     noteDetailViewModel: NoteDetailViewModel
 ) {
-    "• ".let {
-        Box(
-            Modifier
-                .padding(end = 16.dp)
-                .background(GrayFill, shape = RoundedCornerShape(50))
-                .clickable {
-                    val insertedText = state.bodyTextFieldValue.text + "\n$it"
-                    noteDetailViewModel.setAction(
-                        NoteDetailAction.UpdateBody(
-                            TextFieldValue(
-                                text = insertedText,
-                                selection = TextRange(insertedText.length)
-                            )
+    Box(
+        Modifier
+            .padding(end = 16.dp)
+            .background(GrayFill, shape = RoundedCornerShape(50))
+            .clickable {
+                val insertedText =
+                    state.bodyTextFieldValue.text + if (state.bodyTextFieldValue.text.isBlank()) {
+                        "• "
+                    } else {
+                        "\n• "
+                    }
+                noteDetailViewModel.setAction(
+                    NoteDetailAction.UpdateBody(
+                        TextFieldValue(
+                            text = insertedText,
+                            selection = TextRange(insertedText.length)
                         )
                     )
-                }
-        ) {
-            Text(
-                text = it,
-                Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+                )
+            }
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_list_bullet_svgrepo_com),
+            contentDescription = "",
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .align(Alignment.Center)
+        )
+        Text(
+            text = "",
+            Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .alpha(0f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
