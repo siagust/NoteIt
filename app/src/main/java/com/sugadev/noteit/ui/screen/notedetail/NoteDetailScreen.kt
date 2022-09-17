@@ -94,7 +94,6 @@ fun NoteDetailContent(
 ) {
     val state by noteDetailViewModel.state.collectAsStateWithLifecycle()
 
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val focusRequester = remember { FocusRequester() }
 
     Column {
@@ -137,7 +136,6 @@ fun NoteDetailContent(
             value = state.titleTextFieldValue,
             onValueChange = { noteDetailViewModel.setAction(NoteDetailAction.UpdateTitle(it)) },
             modifier = Modifier
-                .padding(top = 8.dp, bottom = 0.dp)
                 .fillMaxWidth(),
             textStyle = Typography.h1,
             decorationBox = @Composable {
@@ -155,7 +153,6 @@ fun NoteDetailContent(
                 noteDetailViewModel.setAction(NoteDetailAction.UpdateBody(it))
             },
             modifier = Modifier
-                .padding(top = 0.dp, bottom = 16.dp)
                 .fillMaxWidth()
                 .weight(1f)
                 .focusRequester(focusRequester),
@@ -170,30 +167,13 @@ fun NoteDetailContent(
             }
         )
 
-        clipboardManager.getText()?.text?.let {
-            Box(
-                Modifier
-                    .padding(16.dp)
-                    .background(GrayFill, shape = RoundedCornerShape(50))
-                    .clickable {
-                        val insertedText = state.bodyTextFieldValue.text + it
-                        noteDetailViewModel.setAction(
-                            NoteDetailAction.UpdateBody(
-                                TextFieldValue(
-                                    text = insertedText,
-                                    selection = TextRange(insertedText.length)
-                                )
-                            )
-                        )
-                    }
-            ) {
-                Text(
-                    text = it,
-                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+        ) {
+            BulletShortcut(state = state, noteDetailViewModel = noteDetailViewModel)
+            ClipboardShortcut(state = state, noteDetailViewModel = noteDetailViewModel)
         }
 
         if (state.isAddNew) {
@@ -202,6 +182,71 @@ fun NoteDetailContent(
             }
         }
 
+    }
+}
+
+@Composable
+fun BulletShortcut(
+    state: NoteDetailState,
+    noteDetailViewModel: NoteDetailViewModel
+) {
+    "• ".let {
+        Box(
+            Modifier
+                .padding(end = 16.dp)
+                .background(GrayFill, shape = RoundedCornerShape(50))
+                .clickable {
+                    val insertedText = state.bodyTextFieldValue.text + "\n$it"
+                    noteDetailViewModel.setAction(
+                        NoteDetailAction.UpdateBody(
+                            TextFieldValue(
+                                text = insertedText,
+                                selection = TextRange(insertedText.length)
+                            )
+                        )
+                    )
+                }
+        ) {
+            Text(
+                text = it,
+                Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+fun ClipboardShortcut(
+    state: NoteDetailState,
+    noteDetailViewModel: NoteDetailViewModel
+) {
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    clipboardManager.getText()?.text?.let {
+        Box(
+            Modifier
+                .padding(end = 16.dp)
+                .background(GrayFill, shape = RoundedCornerShape(50))
+                .clickable {
+                    val insertedText = state.bodyTextFieldValue.text + it
+                    noteDetailViewModel.setAction(
+                        NoteDetailAction.UpdateBody(
+                            TextFieldValue(
+                                text = insertedText,
+                                selection = TextRange(insertedText.length)
+                            )
+                        )
+                    )
+                }
+        ) {
+            Text(
+                text = it,
+                Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
