@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -34,6 +35,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
@@ -145,7 +147,8 @@ fun NoteDetailContent(
                     placeholder = "Title",
                     textStyle = Typography.h1
                 )
-            }
+            },
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
         )
         BasicTextField(
             value = state.bodyTextFieldValue,
@@ -164,7 +167,8 @@ fun NoteDetailContent(
                     placeholder = "Body",
                     textStyle = Typography.body1
                 )
-            }
+            },
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
         )
 
         Row(
