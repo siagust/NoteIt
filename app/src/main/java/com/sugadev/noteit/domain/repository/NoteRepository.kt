@@ -10,5 +10,7 @@ interface NoteRepository {
 
     fun insertNote(note: Note): Flow<Long>
 
+    fun getAllNotesByQuery(query: String): Flow<List<Note>>
+
     suspend fun removeNote(id: Int)
 }
