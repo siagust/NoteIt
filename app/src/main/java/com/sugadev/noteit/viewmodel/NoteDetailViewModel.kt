@@ -3,7 +3,7 @@ package com.sugadev.noteit.viewmodel
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.domain.repository.NoteRepository
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteDetailViewModel @Inject constructor(
     private val noteRepository: NoteRepository,
-    private val firebaseAnalytics: FirebaseAnalytics
+    private val analyticsManager: AnalyticsManager
 ) :
     BaseViewModel<NoteDetailState, NoteDetailAction, NoteDetailEffect>(NoteDetailState.INITIAL) {
 
@@ -44,28 +44,31 @@ class NoteDetailViewModel @Inject constructor(
 
     private fun loadNote(id: Int) {
         viewModelScope.launch {
-            noteRepository.getNoteById(id).take(1).collect() {
-                val isAddNew = it.id == null
-                if (isAddNew) {
-                    firebaseAnalytics.logEvent(Events.LOAD_EMPTY_NOTE, null)
-                } else {
-                    firebaseAnalytics.logEvent(Events.LOAD_EXISTING_NOTE, null)
-                }
-                setState {
-                    copy(
-                        note = it,
-                        isAddNew = isAddNew,
-                        bodyTextFieldValue = TextFieldValue(
-                            text = it.body ?: "",
-                            selection = TextRange(it.body?.length ?: 0)
-                        ),
-                        titleTextFieldValue = TextFieldValue(
-                            text = it.title ?: "",
-                            selection = TextRange(it.title?.length ?: 0)
+            noteRepository
+                .getNoteById(id)
+                .take(1)
+                .collect() {
+                    val isAddNew = it.id == null
+                    if (isAddNew) {
+                        analyticsManager.trackEvent(Events.LOAD_EMPTY_NOTE, null)
+                    } else {
+                        analyticsManager.trackEvent(Events.LOAD_EXISTING_NOTE, null)
+                    }
+                    setState {
+                        copy(
+                            note = it,
+                            isAddNew = isAddNew,
+                            bodyTextFieldValue = TextFieldValue(
+                                text = it.body ?: "",
+                                selection = TextRange(it.body?.length ?: 0)
+                            ),
+                            titleTextFieldValue = TextFieldValue(
+                                text = it.title ?: "",
+                                selection = TextRange(it.title?.length ?: 0)
+                            )
                         )
-                    )
+                    }
                 }
-            }
         }
     }
 
@@ -111,7 +114,7 @@ class NoteDetailViewModel @Inject constructor(
             }
             Delete -> {
                 removeNote()
-                firebaseAnalytics.logEvent(Events.DELETE_NOTE, null)
+                analyticsManager.trackEvent(Events.DELETE_NOTE, null)
             }
             Save -> {
                 saveNote()

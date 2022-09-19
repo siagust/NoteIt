@@ -10,6 +10,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +21,8 @@ import com.sugadev.noteit.navigation.Route
 import com.sugadev.noteit.ui.screen.home.HomeScreen
 import com.sugadev.noteit.ui.screen.notedetail.NoteDetailScreen
 import com.sugadev.noteit.ui.theme.NoteItTheme
+import com.sugadev.noteit.viewmodel.HomeViewModel
+import com.sugadev.noteit.viewmodel.NoteDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -51,12 +54,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppScreen() {
     val navController = rememberNavController()
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val noteDetailViewModel = hiltViewModel<NoteDetailViewModel>()
     NavHost(
         navController = navController,
         startDestination = Route.Home.route,
     ) {
         composable(route = Route.Home.route) {
-            HomeScreen {
+            HomeScreen(homeViewModel = homeViewModel, route = Route.Home.route) {
                 navController.navigate(
                     Route.NoteDetail.createRoute(it.id ?: 0)
                 )
@@ -70,7 +75,10 @@ fun AppScreen() {
             )) { navBackStackEntry ->
             val noteId = navBackStackEntry.arguments?.getInt("noteId")
             requireNotNull(noteId) { "noteId not found" }
-            NoteDetailScreen(noteId, onBackPressed = { navController.navigateUp() })
+            NoteDetailScreen(
+                noteId,
+                noteDetailViewModel = noteDetailViewModel,
+                onBackPressed = { navController.navigateUp() })
         }
     }
 }

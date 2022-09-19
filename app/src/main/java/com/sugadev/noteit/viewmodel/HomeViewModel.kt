@@ -1,6 +1,10 @@
 package com.sugadev.noteit.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.sugadev.noteit.base.analytics.AnalyticsManager
+import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_EMPTY_NOTE
+import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_NOT_EMPTY_NOTE
+import com.sugadev.noteit.base.analytics.Events.Companion.SEARCH_HOME
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.domain.repository.NoteRepository
 import com.sugadev.noteit.ui.screen.home.HomeAction
@@ -18,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val noteRepository: NoteRepository
+    private val noteRepository: NoteRepository,
+    private val analyticsManager: AnalyticsManager
 ) :
     BaseViewModel<HomeState, HomeAction, NoteDetailEffect>(HomeState.INITIAL) {
 
@@ -37,6 +42,7 @@ class HomeViewModel @Inject constructor(
                         getAllNote()
                     } else {
                         searchNotes()
+                        analyticsManager.trackEvent(SEARCH_HOME, null)
                     }
                 }
         }
@@ -54,6 +60,11 @@ class HomeViewModel @Inject constructor(
     private fun getAllNote() {
         viewModelScope.launch {
             noteRepository.getAllNote().collect() {
+                if (it.isEmpty()) {
+                    analyticsManager.trackEvent(LOAD_HOME_EMPTY_NOTE, null)
+                } else {
+                    analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null)
+                }
                 setState { copy(notes = it) }
             }
         }

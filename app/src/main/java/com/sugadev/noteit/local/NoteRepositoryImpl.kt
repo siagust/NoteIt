@@ -16,23 +16,22 @@ class NoteRepositoryImpl @Inject constructor(
     private val noteDao: NoteDao
 ) : NoteRepository {
 
-    override fun getAllNote(): Flow<List<Note>> = flow {
-        try {
-            emit(listOf())
-            val notes = noteDao.getAllNotes().map { note ->
-                Note(
-                    id = note.id,
-                    title = note.title,
-                    body = note.body,
-                    date = note.date
-                )
-
+    override fun getAllNote(): Flow<List<Note>> {
+        return noteDao
+            .getAllNotes()
+            .filterNotNull()
+            .map {
+                it.map { noteDb ->
+                    Note(
+                        id = noteDb.id,
+                        title = noteDb.title,
+                        body = noteDb.body,
+                        date = noteDb.date
+                    )
+                }
             }
-            emit(notes)
-        } catch (e: Exception) {
-            emit(listOf())
-        }
-    }.flowOn(Dispatchers.IO)
+            .flowOn(Dispatchers.IO)
+    }
 
     override fun getNoteById(id: Int): Flow<Note> {
         return noteDao.getNoteById(id)

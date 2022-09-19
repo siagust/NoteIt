@@ -42,7 +42,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
@@ -57,7 +56,7 @@ import com.sugadev.noteit.viewmodel.NoteDetailViewModel
 fun NoteDetailScreen(
     noteId: Int,
     modifier: Modifier = Modifier,
-    noteDetailViewModel: NoteDetailViewModel = hiltViewModel(),
+    noteDetailViewModel: NoteDetailViewModel,
     onBackPressed: () -> Unit
 ) {
     fun loadNote() {
