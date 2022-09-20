@@ -1,4 +1,4 @@
-package com.sugadev.noteit.viewmodel
+package com.sugadev.noteit.features.home
 
 import androidx.lifecycle.viewModelScope
 import com.sugadev.noteit.base.analytics.AnalyticsManager
@@ -7,11 +7,9 @@ import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_NOT_EMPTY_NO
 import com.sugadev.noteit.base.analytics.Events.Companion.SEARCH_HOME
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.domain.repository.NoteRepository
-import com.sugadev.noteit.ui.screen.home.HomeAction
-import com.sugadev.noteit.ui.screen.home.HomeAction.LoadNote
-import com.sugadev.noteit.ui.screen.home.HomeAction.UpdateSearchText
-import com.sugadev.noteit.ui.screen.home.HomeState
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailEffect
+import com.sugadev.noteit.features.home.HomeAction.LoadNote
+import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
+import com.sugadev.noteit.features.notedetail.NoteDetailEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.distinctUntilChangedBy

@@ -17,12 +17,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.sugadev.noteit.base.service.ChatHeadService
+import com.sugadev.noteit.features.home.HomeScreen
+import com.sugadev.noteit.features.home.HomeViewModel
+import com.sugadev.noteit.features.notedetail.NoteDetailScreen
+import com.sugadev.noteit.features.notedetail.NoteDetailViewModel
 import com.sugadev.noteit.navigation.Route
-import com.sugadev.noteit.ui.screen.home.HomeScreen
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailScreen
+import com.sugadev.noteit.navigation.Route.NoteDetail
 import com.sugadev.noteit.ui.theme.NoteItTheme
-import com.sugadev.noteit.viewmodel.HomeViewModel
-import com.sugadev.noteit.viewmodel.NoteDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -63,7 +64,7 @@ fun AppScreen() {
         composable(route = Route.Home.route) {
             HomeScreen(homeViewModel = homeViewModel) {
                 navController.navigate(
-                    Route.NoteDetail.createRoute(it.id ?: 0)
+                    NoteDetail.createRoute(it.id ?: 0)
                 )
             }
         }

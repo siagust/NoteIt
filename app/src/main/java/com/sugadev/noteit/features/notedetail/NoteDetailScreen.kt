@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
 
-package com.sugadev.noteit.ui.screen.notedetail
+package com.sugadev.noteit.features.notedetail
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -45,12 +45,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Delete
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.LoadNote
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Save
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.LoadNote
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.Save
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateBody
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateTitle
 import com.sugadev.noteit.ui.theme.GrayFill
 import com.sugadev.noteit.ui.theme.Typography
-import com.sugadev.noteit.viewmodel.NoteDetailViewModel
 
 @Composable
 fun NoteDetailScreen(
@@ -138,7 +139,7 @@ fun NoteDetailContent(
         }
         BasicTextField(
             value = state.titleTextFieldValue,
-            onValueChange = { noteDetailViewModel.setAction(NoteDetailAction.UpdateTitle(it)) },
+            onValueChange = { noteDetailViewModel.setAction(UpdateTitle(it)) },
             modifier = Modifier
                 .fillMaxWidth(),
             textStyle = Typography.h1,
@@ -155,7 +156,7 @@ fun NoteDetailContent(
         BasicTextField(
             value = state.bodyTextFieldValue,
             onValueChange = {
-                noteDetailViewModel.setAction(NoteDetailAction.UpdateBody(it))
+                noteDetailViewModel.setAction(UpdateBody(it))
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -212,7 +213,7 @@ fun BulletShortcut(
                         "\n• "
                     }
                 noteDetailViewModel.setAction(
-                    NoteDetailAction.UpdateBody(
+                    UpdateBody(
                         TextFieldValue(
                             text = insertedText,
                             selection = TextRange(insertedText.length)
@@ -253,7 +254,7 @@ fun ClipboardShortcut(
                 .clickable {
                     val insertedText = state.bodyTextFieldValue.text + it
                     noteDetailViewModel.setAction(
-                        NoteDetailAction.UpdateBody(
+                        UpdateBody(
                             TextFieldValue(
                                 text = insertedText,
                                 selection = TextRange(insertedText.length)

@@ -1,4 +1,4 @@
-package com.sugadev.noteit.ui.screen.home
+package com.sugadev.noteit.features.home
 
 sealed interface HomeAction {
     object LoadNote : HomeAction

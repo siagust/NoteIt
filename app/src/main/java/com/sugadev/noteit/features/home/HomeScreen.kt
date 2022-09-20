@@ -1,4 +1,4 @@
-package com.sugadev.noteit.ui.screen.home
+package com.sugadev.noteit.features.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,14 +35,13 @@ import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells.Adaptive
 import com.sugadev.noteit.R.drawable
 import com.sugadev.noteit.domain.model.Note
+import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
+import com.sugadev.noteit.features.notedetail.TextFieldDecorationBox
 import com.sugadev.noteit.local.model.DUMMY_NOTES
-import com.sugadev.noteit.ui.screen.home.HomeAction.UpdateSearchText
-import com.sugadev.noteit.ui.screen.notedetail.TextFieldDecorationBox
 import com.sugadev.noteit.ui.theme.BlackFill
 import com.sugadev.noteit.ui.theme.GrayFill
 import com.sugadev.noteit.ui.theme.Typography
 import com.sugadev.noteit.ui.theme.WhiteFill
-import com.sugadev.noteit.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable

@@ -1,4 +1,4 @@
-package com.sugadev.noteit.viewmodel
+package com.sugadev.noteit.features.notedetail
 
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -7,14 +7,11 @@ import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.domain.repository.NoteRepository
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Delete
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.LoadNote
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.Save
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.UpdateBody
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailAction.UpdateTitle
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailEffect
-import com.sugadev.noteit.ui.screen.notedetail.NoteDetailState
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.LoadNote
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.Save
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateBody
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateTitle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Calendar
 import kotlinx.coroutines.FlowPreview

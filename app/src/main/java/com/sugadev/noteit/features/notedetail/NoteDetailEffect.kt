@@ -1,4 +1,4 @@
-package com.sugadev.noteit.ui.screen.notedetail
+package com.sugadev.noteit.features.notedetail
 
 sealed interface NoteDetailEffect {
     object Close : NoteDetailEffect
