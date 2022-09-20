@@ -6,6 +6,7 @@ import com.sugadev.noteit.local.model.NoteDao
 import com.sugadev.noteit.local.model.NoteDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -19,6 +20,7 @@ class NoteRepositoryImpl @Inject constructor(
     override fun getAllNote(): Flow<List<Note>> {
         return noteDao
             .getAllNotes()
+            .distinctUntilChanged()
             .filterNotNull()
             .map {
                 it.map { noteDb ->

@@ -61,7 +61,7 @@ fun AppScreen() {
         startDestination = Route.Home.route,
     ) {
         composable(route = Route.Home.route) {
-            HomeScreen(homeViewModel = homeViewModel, route = Route.Home.route) {
+            HomeScreen(homeViewModel = homeViewModel) {
                 navController.navigate(
                     Route.NoteDetail.createRoute(it.id ?: 0)
                 )

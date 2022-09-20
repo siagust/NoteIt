@@ -98,6 +98,7 @@ fun NoteDetailContent(
     val state by noteDetailViewModel.state.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
     Column {
         Row {
@@ -178,7 +179,11 @@ fun NoteDetailContent(
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
             BulletShortcut(state = state, noteDetailViewModel = noteDetailViewModel)
-            ClipboardShortcut(state = state, noteDetailViewModel = noteDetailViewModel)
+            ClipboardShortcut(
+                state = state,
+                noteDetailViewModel = noteDetailViewModel,
+                clipboardManager.getText()?.text
+            )
         }
 
         if (state.isAddNew) {
@@ -237,10 +242,10 @@ fun BulletShortcut(
 @Composable
 fun ClipboardShortcut(
     state: NoteDetailState,
-    noteDetailViewModel: NoteDetailViewModel
+    noteDetailViewModel: NoteDetailViewModel,
+    copiedText: String?
 ) {
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
-    clipboardManager.getText()?.text?.let {
+    copiedText?.let {
         Box(
             Modifier
                 .padding(end = 16.dp)

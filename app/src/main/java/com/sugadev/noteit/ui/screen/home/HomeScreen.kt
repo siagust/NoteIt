@@ -18,7 +18,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +36,6 @@ import com.nesyou.staggeredgrid.StaggeredCells.Adaptive
 import com.sugadev.noteit.R.drawable
 import com.sugadev.noteit.domain.model.Note
 import com.sugadev.noteit.local.model.DUMMY_NOTES
-import com.sugadev.noteit.ui.screen.home.HomeAction.LoadNote
 import com.sugadev.noteit.ui.screen.home.HomeAction.UpdateSearchText
 import com.sugadev.noteit.ui.screen.notedetail.TextFieldDecorationBox
 import com.sugadev.noteit.ui.theme.BlackFill
@@ -51,17 +49,9 @@ import com.sugadev.noteit.viewmodel.HomeViewModel
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
-    route: String,
     onClick: (Note) -> Unit,
 ) {
     val state by homeViewModel.state.collectAsStateWithLifecycle()
-
-    fun loadNote() {
-        homeViewModel.setAction(LoadNote)
-    }
-    LaunchedEffect(route) {
-        loadNote()
-    }
 
     Surface(
         modifier = modifier.fillMaxSize(),

@@ -29,6 +29,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         initSearchTextListener()
+        getAllNote()
     }
 
     private fun initSearchTextListener() {
