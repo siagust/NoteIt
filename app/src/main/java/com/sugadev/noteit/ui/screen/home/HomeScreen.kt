@@ -61,7 +61,7 @@ fun HomeScreen(
         val queryText = state.searchText
         Column {
             Text(
-                text = "NoteIt",
+                text = "Note!t",
                 Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
