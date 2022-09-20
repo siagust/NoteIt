@@ -48,7 +48,8 @@ import com.sugadev.noteit.ui.theme.WhiteFill
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
-    onClick: (Note) -> Unit,
+    onNoteClicked: (Note) -> Unit,
+    onSettingsClicked: () -> Unit
 ) {
     val state by homeViewModel.state.collectAsStateWithLifecycle()
 
@@ -59,13 +60,26 @@ fun HomeScreen(
         val notes = state.notes
         val queryText = state.searchText
         Column {
-            Text(
-                text = "Note!t",
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
-                style = Typography.h1,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Note!t",
+                    style = Typography.h1,
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 24.dp)
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Image(
+                    painter = painterResource(id = drawable.ic_setting_svgrepo_com),
+                    contentDescription = "Settings Icon",
+                    modifier = Modifier
+                        .clickable { onSettingsClicked() }
+                        .padding(end = 16.dp, top = 24.dp)
+                )
+            }
 
             Row(
                 Modifier
@@ -103,7 +117,7 @@ fun HomeScreen(
                 }
             }
 
-            HomeContent(modifier, notes, queryText) { onClick(it) }
+            HomeContent(modifier, notes, queryText) { onNoteClicked(it) }
         }
     }
 }

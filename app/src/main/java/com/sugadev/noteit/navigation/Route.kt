@@ -5,4 +5,6 @@ sealed class Route(val route: String) {
     object NoteDetail : Route("noteDetail/{noteId}") {
         fun createRoute(noteId: Int) = "noteDetail/$noteId"
     }
+
+    object Settings : Route("settings")
 }
