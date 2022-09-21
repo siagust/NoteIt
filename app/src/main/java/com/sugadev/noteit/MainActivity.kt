@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,12 +20,17 @@ import androidx.navigation.navArgument
 import com.sugadev.noteit.base.service.ChatHeadService
 import com.sugadev.noteit.features.home.HomeScreen
 import com.sugadev.noteit.features.home.HomeViewModel
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.LoadNote
 import com.sugadev.noteit.features.notedetail.NoteDetailScreen
 import com.sugadev.noteit.features.notedetail.NoteDetailViewModel
 import com.sugadev.noteit.features.settings.SettingsScreen
+import com.sugadev.noteit.features.settings.SettingsViewModel
+import com.sugadev.noteit.local.preference.UserPreferencesRepository
+import com.sugadev.noteit.local.preference.userPreferencesDataStore
 import com.sugadev.noteit.navigation.Route
 import com.sugadev.noteit.ui.theme.NoteItTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -48,7 +54,17 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        startService(Intent(this@MainActivity, ChatHeadService::class.java))
+        lifecycleScope.launch {
+            userPreferencesDataStore.data.collect() {
+                val isShortcutEnabled = it[UserPreferencesRepository.SHORTCUT_ENABLED] ?: false
+                if (isShortcutEnabled) startService(
+                    Intent(
+                        this@MainActivity,
+                        ChatHeadService::class.java
+                    )
+                )
+            }
+        }
     }
 }
 
@@ -57,6 +73,7 @@ fun AppScreen() {
     val navController = rememberNavController()
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val noteDetailViewModel = hiltViewModel<NoteDetailViewModel>()
+    val settingsViewModel = hiltViewModel<SettingsViewModel>()
     NavHost(
         navController = navController,
         startDestination = Route.Home.route,
@@ -84,6 +101,7 @@ fun AppScreen() {
             )) { navBackStackEntry ->
             val noteId = navBackStackEntry.arguments?.getInt("noteId")
             requireNotNull(noteId) { "noteId not found" }
+            noteDetailViewModel.setAction(LoadNote(noteId))
             NoteDetailScreen(
                 noteId,
                 noteDetailViewModel = noteDetailViewModel,
@@ -91,7 +109,7 @@ fun AppScreen() {
         }
         composable(Route.Settings.route) {
             SettingsScreen(
-                noteDetailViewModel = noteDetailViewModel,
+                settingsViewModel = settingsViewModel,
                 onBackPressed = { navController.navigateUp() })
         }
     }

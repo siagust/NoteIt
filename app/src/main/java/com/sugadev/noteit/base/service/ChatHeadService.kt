@@ -19,8 +19,15 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
+import androidx.datastore.preferences.core.edit
 import com.sugadev.noteit.MainActivity
 import com.sugadev.noteit.R
+import com.sugadev.noteit.local.preference.UserPreferences
+import com.sugadev.noteit.local.preference.UserPreferencesRepository.PreferencesKeys
+import com.sugadev.noteit.local.preference.UserPreferencesRepository.PreferencesKeys.SHORTCUT_POSITION
+import com.sugadev.noteit.local.preference.userPreferencesDataStore
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class ChatHeadService : Service() {
@@ -56,6 +63,18 @@ class ChatHeadService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        GlobalScope.launch {
+            userPreferencesDataStore.data.collect() {
+                // Get our show completed value, defaulting to false if not set:
+                val isShortcutEnabled = it[PreferencesKeys.SHORTCUT_ENABLED] ?: false
+                UserPreferences(isShortcutEnabled)
+
+                val shortCutPosition = it[PreferencesKeys.SHORTCUT_POSITION] ?: "0,100"
+                params.x = shortCutPosition.split(",").get(0).toInt()
+                params.y = shortCutPosition.split(",").get(1).toInt()
+            }
+        }
+
         //Inflate the chat head layout we created
         mChatHeadView = LayoutInflater.from(this).inflate(R.layout.layout_chat_head, null)
 
@@ -64,8 +83,6 @@ class ChatHeadService : Service() {
         //Specify the chat head position
         params.gravity =
             Gravity.TOP or Gravity.LEFT //Initially view will be added to top-left corner
-        params.x = 0
-        params.y = 100
 
         //Add the view to the window
         mWindowManager = getSystemService(WINDOW_SERVICE) as WindowManager?
@@ -189,6 +206,14 @@ class ChatHeadService : Service() {
     private fun updateViewLayout() {
         if (mChatHeadView?.windowToken != null) {
             mWindowManager?.updateViewLayout(mChatHeadView, params)
+
+            GlobalScope.launch {
+                userPreferencesDataStore.edit { preferences ->
+                    preferences[SHORTCUT_POSITION] = "${params.x},${params.y}"
+
+                    //Log.d("siagust oncreate", "${isShortcutEnabled}")
+                }
+            }
         }
     }
 

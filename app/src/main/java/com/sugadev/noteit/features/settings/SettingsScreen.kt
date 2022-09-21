@@ -1,5 +1,8 @@
 package com.sugadev.noteit.features.settings
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -11,21 +14,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Switch
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R.drawable
-import com.sugadev.noteit.features.notedetail.NoteDetailAction.Save
-import com.sugadev.noteit.features.notedetail.NoteDetailViewModel
 import com.sugadev.noteit.ui.theme.GrayFill
+import com.sugadev.noteit.ui.theme.Typography
 
 @Composable
 fun SettingsScreen(
-    noteDetailViewModel: NoteDetailViewModel,
+    settingsViewModel: SettingsViewModel,
     onBackPressed: () -> Unit
 ) {
     BackHandler {
@@ -38,10 +44,10 @@ fun SettingsScreen(
     ) {
         NoteDetailContent(
             onBackPressed = {
-                noteDetailViewModel.setAction(Save)
+
                 onBackPressed()
             },
-            noteDetailViewModel = noteDetailViewModel
+            settingsViewModel = settingsViewModel
         )
     }
 }
@@ -50,9 +56,9 @@ fun SettingsScreen(
 @Composable
 fun NoteDetailContent(
     onBackPressed: () -> Unit,
-    noteDetailViewModel: NoteDetailViewModel
+    settingsViewModel: SettingsViewModel
 ) {
-    val state by noteDetailViewModel.state.collectAsStateWithLifecycle()
+    val state by settingsViewModel.state.collectAsStateWithLifecycle()
 
     Column {
         Row {
@@ -72,5 +78,46 @@ fun NoteDetailContent(
             }
         }
 
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Column(modifier = Modifier.weight(4f)) {
+                Text(text = "Enable bubble shortcut", style = Typography.h2)
+                Text(
+                    text = "Shortcut feature require Allow display over other apps permission. Please enable it via settings. ",
+                    style = Typography.body2
+                )
+            }
+
+            val context = LocalContext.current
+            if (Settings.canDrawOverlays(LocalContext.current)) {
+                Switch(
+                    modifier = Modifier.weight(1f),
+                    checked = state.isShortcutEnabled,
+                    onCheckedChange = {
+                        settingsViewModel.setAction(
+                            SettingsAction.UpdateShortcut(
+                                isEnabled = it
+                            )
+                        )
+                    })
+            } else {
+                settingsViewModel.setAction(SettingsAction.UpdateShortcut(isEnabled = false))
+                Switch(
+                    modifier = Modifier.weight(1f),
+                    checked = state.isShortcutEnabled,
+                    onCheckedChange = {
+                        settingsViewModel.setAction(SettingsAction.UpdateShortcut(isEnabled = it))
+                        context.startActivity(
+                            Intent(
+                                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:${context.packageName}")
+                            )
+                        )
+                    }
+                )
+            }
+        }
     }
 }

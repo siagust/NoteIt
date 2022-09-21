@@ -46,7 +46,6 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
-import com.sugadev.noteit.features.notedetail.NoteDetailAction.LoadNote
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Save
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateBody
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateTitle
@@ -60,12 +59,6 @@ fun NoteDetailScreen(
     noteDetailViewModel: NoteDetailViewModel,
     onBackPressed: () -> Unit
 ) {
-    fun loadNote() {
-        noteDetailViewModel.setAction(LoadNote(noteId))
-    }
-
-    loadNote()
-
     BackHandler {
         noteDetailViewModel.setAction(Save)
         onBackPressed()

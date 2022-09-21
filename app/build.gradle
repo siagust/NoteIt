@@ -79,4 +79,6 @@ dependencies {
     implementation platform(libs.google.firebase)
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
 }
