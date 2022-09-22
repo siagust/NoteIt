@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.ClipboardManager
@@ -198,6 +199,7 @@ fun BulletShortcut(
         Modifier
             .padding(end = 16.dp)
             .background(GrayFill, shape = RoundedCornerShape(50))
+            .clip(shape = RoundedCornerShape(50))
             .clickable {
                 val insertedText =
                     state.bodyTextFieldValue.text + if (state.bodyTextFieldValue.text.isBlank()) {
@@ -244,6 +246,7 @@ fun ClipboardShortcut(
             Modifier
                 .padding(end = 16.dp)
                 .background(GrayFill, shape = RoundedCornerShape(50))
+                .clip(shape = RoundedCornerShape(50))
                 .clickable {
                     val insertedText = state.bodyTextFieldValue.text + it
                     noteDetailViewModel.setAction(

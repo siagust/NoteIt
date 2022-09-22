@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.sugadev.noteit"
-        minSdk 30
+        minSdk 27
         targetSdk 32
         versionCode 1
         versionName "1.0.0"
@@ -81,5 +81,5 @@ dependencies {
 
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation "com.google.accompanist:accompanist-permissions:0.26.3-beta"
-
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.26.3-beta"
 }

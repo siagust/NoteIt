@@ -9,4 +9,6 @@ val Teal200 = Color(0xFF03DAC5)
 
 val BlackFill = Color(0xFF111011)
 val GrayFill = Color(0xFFD3DDDD)
+val PaperColor = Color(0xFFFAFAFA)
+val PaperColorOutline = Color(0xFFF0F0F0)
 val WhiteFill = Color(0xFFEFF2F1)

@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.res.painterResource
@@ -181,6 +182,7 @@ fun NotesCard(
             .fillMaxWidth()
             .padding(8.dp)
             .background(color = GrayFill, shape = RoundedCornerShape(16.dp))
+            .clip(shape = RoundedCornerShape(16.dp))
             .clickable { onClick.invoke() }
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -251,6 +253,7 @@ fun AddNewNotes(
             .fillMaxWidth()
             .padding(8.dp)
             .background(color = BlackFill, shape = RoundedCornerShape(16.dp))
+            .clip(shape = RoundedCornerShape(16.dp))
             .clickable { onClick.invoke() }
     ) {
         AddNewText("Add meaning title here", "Add marvelious detail for your notes")
