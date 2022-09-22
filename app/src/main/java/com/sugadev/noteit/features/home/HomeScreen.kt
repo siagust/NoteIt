@@ -236,7 +236,7 @@ fun NotesText(
         text = anotatedBody,
         color = textColor,
         modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 0.dp, bottom = 16.dp),
-        style = Typography.body1,
+        style = Typography.body2,
         overflow = TextOverflow.Ellipsis,
         maxLines = 12
     )

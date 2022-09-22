@@ -31,7 +31,7 @@ val Typography = Typography(
     subtitle1 = TextStyle(
         fontFamily = font,
         fontWeight = FontWeight.Medium,
-        fontSize = 20.sp
+        fontSize = 16.sp
     ),
     h1 = TextStyle(
         fontFamily = font,
