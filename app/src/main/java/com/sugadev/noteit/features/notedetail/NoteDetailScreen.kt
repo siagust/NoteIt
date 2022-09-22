@@ -2,7 +2,10 @@
 
 package com.sugadev.noteit.features.notedetail
 
+import android.content.Context
+import android.content.Intent
 import androidx.activity.compose.BackHandler
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,6 +39,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
@@ -43,6 +48,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
@@ -55,7 +61,6 @@ import com.sugadev.noteit.ui.theme.Typography
 
 @Composable
 fun NoteDetailScreen(
-    noteId: Int,
     modifier: Modifier = Modifier,
     noteDetailViewModel: NoteDetailViewModel,
     onBackPressed: () -> Unit
@@ -97,37 +102,19 @@ fun NoteDetailContent(
 
     Column {
         Row {
-            Card(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
-                    .clickable { onBackPressed() },
-                shape = RoundedCornerShape(8.dp),
-                elevation = 2.dp,
-                backgroundColor = GrayFill
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_chevron_back_svgrepo_com),
-                    contentDescription = "",
-                    modifier = Modifier.padding(6.dp)
-                )
+            TopActionButton(iconId = R.drawable.ic_chevron_back_svgrepo_com) {
+                onBackPressed()
             }
 
             Spacer(modifier = Modifier.weight(1f))
+            val context = LocalContext.current
 
             if (state.note.id != null) {
-                Card(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
-                        .clickable { onDeletePressed(state.note.id ?: 0) },
-                    shape = RoundedCornerShape(8.dp),
-                    elevation = 2.dp,
-                    backgroundColor = GrayFill
-                ) {
-                    Text(
-                        text = "Delete",
-                        modifier = Modifier.padding(vertical = 6.dp, horizontal = 12.dp),
-                        style = Typography.body1
-                    )
+                TopActionButton(iconId = R.drawable.ic_share_svgrepo_com) {
+                    launchShareAction(context = context, state = state)
+                }
+                TopActionButton(iconId = R.drawable.ic_delete_svgrepo_com) {
+                    onDeletePressed(state.note.id ?: 0)
                 }
             }
         }
@@ -187,6 +174,48 @@ fun NoteDetailContent(
             }
         }
 
+    }
+}
+
+private fun launchShareAction(
+    context: Context,
+    state: NoteDetailState
+) {
+    val type = "text/plain"
+    val extraText =
+        state.titleTextFieldValue.text + "\n" + state.bodyTextFieldValue.text
+    val shareWith = "ShareWith"
+
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.type = type
+    intent.putExtra(Intent.EXTRA_TEXT, extraText)
+
+    ContextCompat.startActivity(
+        context,
+        Intent.createChooser(intent, shareWith),
+        null
+    )
+}
+
+@Composable
+fun TopActionButton(
+    @DrawableRes iconId: Int,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
+            .size(42.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(8.dp),
+        elevation = 2.dp,
+        backgroundColor = GrayFill
+    ) {
+        Image(
+            painter = painterResource(id = iconId),
+            contentDescription = "",
+            modifier = Modifier.padding(6.dp)
+        )
     }
 }
 

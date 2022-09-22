@@ -103,7 +103,6 @@ fun AppScreen() {
             requireNotNull(noteId) { "noteId not found" }
             noteDetailViewModel.setAction(LoadNote(noteId))
             NoteDetailScreen(
-                noteId,
                 noteDetailViewModel = noteDetailViewModel,
                 onBackPressed = { navController.navigateUp() })
         }
