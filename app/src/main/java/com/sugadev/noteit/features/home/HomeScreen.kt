@@ -61,13 +61,14 @@ fun HomeScreen(
         val queryText = state.searchText
         Column {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 8.dp)
             ) {
                 Text(
                     text = "Note!t",
                     style = Typography.h1,
                     modifier = Modifier
-                        .padding(start = 16.dp, top = 24.dp)
+                        .padding(16.dp)
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -77,7 +78,7 @@ fun HomeScreen(
                     contentDescription = "Settings Icon",
                     modifier = Modifier
                         .clickable { onSettingsClicked() }
-                        .padding(end = 16.dp, top = 24.dp)
+                        .padding(16.dp)
                 )
             }
 
@@ -88,7 +89,7 @@ fun HomeScreen(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(start = 16.dp, end = 16.dp)
                         .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)),
                     verticalAlignment = Alignment.CenterVertically
                 ) {

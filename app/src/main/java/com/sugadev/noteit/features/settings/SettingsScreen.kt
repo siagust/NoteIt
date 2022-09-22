@@ -1,9 +1,16 @@
+@file:OptIn(ExperimentalPermissionsApi::class)
+
 package com.sugadev.noteit.features.settings
 
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.sugadev.noteit.R.drawable
 import com.sugadev.noteit.ui.theme.GrayFill
 import com.sugadev.noteit.ui.theme.Typography
@@ -85,13 +93,26 @@ fun NoteDetailContent(
             Column(modifier = Modifier.weight(4f)) {
                 Text(text = "Enable bubble shortcut", style = Typography.h2)
                 Text(
-                    text = "Shortcut feature require Allow display over other apps permission. Please enable it via settings. ",
+                    text = "Shortcut feature require Allow display over other apps permission. Please enable it via settings.",
                     style = Typography.body2
                 )
             }
 
             val context = LocalContext.current
-            if (Settings.canDrawOverlays(LocalContext.current)) {
+
+            val launcher =
+                rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult()) {
+                    if (Settings.canDrawOverlays(context)) settingsViewModel.setAction(
+                        SettingsAction.UpdateShortcut(isEnabled = true)
+                    )
+                }
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.fromParts("package", context.packageName, null)
+            )
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_IMMUTABLE)
+
+            if (Settings.canDrawOverlays(context)) {
                 Switch(
                     modifier = Modifier.weight(1f),
                     checked = state.isShortcutEnabled,
@@ -109,11 +130,8 @@ fun NoteDetailContent(
                     checked = state.isShortcutEnabled,
                     onCheckedChange = {
                         settingsViewModel.setAction(SettingsAction.UpdateShortcut(isEnabled = it))
-                        context.startActivity(
-                            Intent(
-                                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                Uri.parse("package:${context.packageName}")
-                            )
+                        launcher.launch(
+                            IntentSenderRequest.Builder(pendingIntent).build()
                         )
                     }
                 )

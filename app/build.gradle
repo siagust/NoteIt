@@ -80,5 +80,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "com.google.accompanist:accompanist-permissions:0.26.3-beta"
 
 }
