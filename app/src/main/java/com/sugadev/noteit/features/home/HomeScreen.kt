@@ -256,7 +256,7 @@ fun AddNewNotes(
             .clip(shape = RoundedCornerShape(16.dp))
             .clickable { onClick.invoke() }
     ) {
-        AddNewText("Add meaning title here", "Add marvelious detail for your notes")
+        AddNewText("Add meaning title here", "Add marvelous detail for your notes")
     }
 }
 
