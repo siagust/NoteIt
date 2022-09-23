@@ -109,7 +109,7 @@ fun AppScreen() {
             noteDetailViewModel.setAction(LoadNote(noteId))
             NoteDetailScreen(
                 noteDetailViewModel = noteDetailViewModel,
-                onBackPressed = { navController.navigateUp() })
+                closeScreen = { navController.navigateUp() })
         }
         composable(Route.Settings.route) {
             SettingsScreen(

@@ -5,11 +5,11 @@ package com.sugadev.noteit.features.notedetail
 import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.BackHandler
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,10 +17,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -51,10 +51,16 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
+import com.sugadev.noteit.base.viewmodel.HandleEffect
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.DismissDeleteConfirmationDialog
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Save
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.ShowDeleteConfirmationDialog
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateBody
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateTitle
+import com.sugadev.noteit.features.notedetail.NoteDetailEffect.CloseScreen
+import com.sugadev.noteit.ui.component.ConfirmationButton
+import com.sugadev.noteit.ui.component.TopActionButton
 import com.sugadev.noteit.ui.theme.GrayFill
 import com.sugadev.noteit.ui.theme.Typography
 
@@ -62,11 +68,11 @@ import com.sugadev.noteit.ui.theme.Typography
 fun NoteDetailScreen(
     modifier: Modifier = Modifier,
     noteDetailViewModel: NoteDetailViewModel,
-    onBackPressed: () -> Unit
+    closeScreen: () -> Unit
 ) {
     BackHandler {
         noteDetailViewModel.setAction(Save)
-        onBackPressed()
+        closeScreen()
     }
 
     Surface(
@@ -76,11 +82,10 @@ fun NoteDetailScreen(
         NoteDetailContent(
             onBackPressed = {
                 noteDetailViewModel.setAction(Save)
-                onBackPressed()
+                closeScreen()
             },
             onDeletePressed = {
-                noteDetailViewModel.setAction(Delete)
-                onBackPressed()
+                closeScreen()
             },
             noteDetailViewModel = noteDetailViewModel
         )
@@ -91,13 +96,27 @@ fun NoteDetailScreen(
 @Composable
 fun NoteDetailContent(
     onBackPressed: () -> Unit,
-    onDeletePressed: (Int) -> Unit,
+    onDeletePressed: () -> Unit,
     noteDetailViewModel: NoteDetailViewModel
 ) {
     val state by noteDetailViewModel.state.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+    HandleEffect(viewModel = noteDetailViewModel, handle = {
+        when (it) {
+            CloseScreen -> onDeletePressed()
+        }
+    })
+
+    if (state.showConfirmationDialog) {
+        ConfirmationDialog(positiveAction = {
+            noteDetailViewModel.setAction(Delete)
+        }, negativeAction = {
+            noteDetailViewModel.setAction(DismissDeleteConfirmationDialog)
+        })
+    }
 
     Column {
         Row {
@@ -113,7 +132,7 @@ fun NoteDetailContent(
                     launchShareAction(context = context, state = state)
                 }
                 TopActionButton(iconId = R.drawable.ic_delete_svgrepo_com) {
-                    onDeletePressed(state.note.id ?: 0)
+                    noteDetailViewModel.setAction(ShowDeleteConfirmationDialog)
                 }
             }
         }
@@ -176,6 +195,41 @@ fun NoteDetailContent(
     }
 }
 
+@Composable
+fun ConfirmationDialog(
+    positiveAction: () -> Unit,
+    negativeAction: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {
+            negativeAction()
+        },
+        title = {
+            Text(text = "Delete Note", style = Typography.h2)
+        },
+        text = {
+            Text("Are you sure want to delete this note?", style = Typography.body2)
+        },
+        shape = RoundedCornerShape(16.dp),
+        buttons = {
+            Row(
+                modifier = Modifier
+                    .padding(all = 8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                ConfirmationButton(modifier = Modifier.weight(1f), text = "Yes") {
+                    positiveAction()
+                }
+
+                ConfirmationButton(modifier = Modifier.weight(1f), text = "No") {
+                    negativeAction()
+                }
+            }
+        }
+    )
+}
+
 private fun launchShareAction(
     context: Context,
     state: NoteDetailState
@@ -194,28 +248,6 @@ private fun launchShareAction(
         Intent.createChooser(intent, shareWith),
         null
     )
-}
-
-@Composable
-fun TopActionButton(
-    @DrawableRes iconId: Int,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
-            .size(48.dp)
-            .clickable { onClick() }
-            .clip(shape = RoundedCornerShape(12.dp))
-            .background(GrayFill, shape = RoundedCornerShape(12.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = iconId),
-            contentDescription = "",
-            modifier = Modifier.padding(6.dp)
-        )
-    }
 }
 
 @Composable

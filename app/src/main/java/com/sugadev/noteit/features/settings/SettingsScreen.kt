@@ -29,7 +29,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.sugadev.noteit.R.drawable
-import com.sugadev.noteit.features.notedetail.TopActionButton
+import com.sugadev.noteit.ui.component.TopActionButton
 import com.sugadev.noteit.ui.theme.Typography
 
 @Composable

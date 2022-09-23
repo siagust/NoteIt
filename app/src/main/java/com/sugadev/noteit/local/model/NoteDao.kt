@@ -19,7 +19,7 @@ interface NoteDao {
     fun insert(note: NoteDb): Long
 
     @Query("DELETE FROM notedb WHERE id = :id")
-    suspend fun removeNote(id: Int)
+    fun removeNote(id: Int)
 
     @Query("SELECT * FROM notedb WHERE text LIKE '%' || :query || '%' OR title LIKE '%' || :query || '%' ORDER BY date DESC")
     fun getAllNotesByQuery(query: String): Flow<List<NoteDb>>

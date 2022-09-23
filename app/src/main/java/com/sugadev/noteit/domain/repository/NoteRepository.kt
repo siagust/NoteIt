@@ -12,5 +12,5 @@ interface NoteRepository {
 
     fun getAllNotesByQuery(query: String): Flow<List<Note>>
 
-    suspend fun removeNote(id: Int)
+    fun removeNote(id: Int): Flow<Unit>
 }

@@ -8,10 +8,13 @@ import com.sugadev.noteit.base.analytics.Events
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.domain.repository.NoteRepository
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.DismissDeleteConfirmationDialog
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.LoadNote
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Save
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.ShowDeleteConfirmationDialog
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateBody
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateTitle
+import com.sugadev.noteit.features.notedetail.NoteDetailEffect.CloseScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Calendar
 import kotlinx.coroutines.FlowPreview
@@ -104,6 +107,10 @@ class NoteDetailViewModel @Inject constructor(
         state.value.note.id?.let {
             viewModelScope.launch {
                 noteRepository.removeNote(it)
+                    .collect {
+                        setState { copy(showConfirmationDialog = false) }
+                        setEffect(CloseScreen)
+                    }
             }
         }
     }
@@ -128,6 +135,16 @@ class NoteDetailViewModel @Inject constructor(
             is UpdateBody -> {
                 setState {
                     copy(bodyTextFieldValue = action.textFieldValue)
+                }
+            }
+            ShowDeleteConfirmationDialog -> {
+                setState {
+                    copy(showConfirmationDialog = true)
+                }
+            }
+            DismissDeleteConfirmationDialog -> {
+                setState {
+                    copy(showConfirmationDialog = false)
                 }
             }
         }

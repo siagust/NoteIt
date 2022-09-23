@@ -61,9 +61,9 @@ class NoteRepositoryImpl @Inject constructor(
         )
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun removeNote(id: Int) {
-        noteDao.removeNote(id)
-    }
+    override fun removeNote(id: Int) = flow {
+        emit(noteDao.removeNote(id))
+    }.flowOn(Dispatchers.IO)
 
     override fun getAllNotesByQuery(query: String): Flow<List<Note>> {
         return noteDao.getAllNotesByQuery(query)

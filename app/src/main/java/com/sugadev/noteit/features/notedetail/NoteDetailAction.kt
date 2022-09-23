@@ -8,4 +8,6 @@ sealed interface NoteDetailAction {
     object Delete : NoteDetailAction
     data class UpdateTitle(val textFieldValue: TextFieldValue) : NoteDetailAction
     data class UpdateBody(val textFieldValue: TextFieldValue) : NoteDetailAction
+    object ShowDeleteConfirmationDialog : NoteDetailAction
+    object DismissDeleteConfirmationDialog : NoteDetailAction
 }
