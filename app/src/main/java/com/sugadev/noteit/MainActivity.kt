@@ -66,6 +66,11 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        stopService(Intent(this@MainActivity, ChatHeadService::class.java))
+    }
 }
 
 @Composable

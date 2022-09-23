@@ -38,7 +38,7 @@ class ChatHeadService : Service() {
     private var startY = 0
     private var initialTouchX = 0
     private var initialTouchY = 0
-    private var lastAction = 0
+    private var lastAction = MotionEvent.ACTION_DOWN
     private val SNAP_STEPS = 50
     private val params = getLayoutParams()
 
@@ -87,12 +87,6 @@ class ChatHeadService : Service() {
         //Add the view to the window
         mWindowManager = getSystemService(WINDOW_SERVICE) as WindowManager?
         mWindowManager!!.addView(mChatHeadView, params)
-
-        //Set the close button.
-//        val closeButton: ImageView = mChatHeadView?.findViewById(id.close_btn) as ImageView
-//        closeButton.setOnClickListener { //close the service and remove the chat head from the window
-//            stopSelf()
-//        }
 
         //Drag and move chat head using user's touch action.
         mChatHeadView?.setOnTouchListener(View.OnTouchListener { _, event ->
@@ -210,8 +204,6 @@ class ChatHeadService : Service() {
             GlobalScope.launch {
                 userPreferencesDataStore.edit { preferences ->
                     preferences[SHORTCUT_POSITION] = "${params.x},${params.y}"
-
-                    //Log.d("siagust oncreate", "${isShortcutEnabled}")
                 }
             }
         }
