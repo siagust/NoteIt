@@ -17,12 +17,14 @@ class UserPreferencesRepository @Inject constructor(
         val SHORTCUT_POSITION = stringPreferencesKey("shortcut_position")
     }
 
-    val userPreferencesFlow: Flow<UserPreferences> = userPreferencesDataStore.data
-        .map { preferences ->
-            // Get our show completed value, defaulting to false if not set:
-            val isShortcutEnabled = preferences[SHORTCUT_ENABLED] ?: false
-            UserPreferences(isShortcutEnabled)
-        }
+    fun getUserPreferences(): Flow<UserPreferences> {
+        return userPreferencesDataStore.data
+            .map { preferences ->
+                // Get our show completed value, defaulting to false if not set:
+                val isShortcutEnabled = preferences[SHORTCUT_ENABLED] ?: false
+                UserPreferences(isShortcutEnabled)
+            }
+    }
 
     suspend fun updateShortcut(shortcutEnabled: Boolean) {
         userPreferencesDataStore.edit { preferences ->

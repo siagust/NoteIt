@@ -21,7 +21,7 @@ class SettingsViewModel @Inject constructor(private val userPreferencesRepositor
 
     private fun loadSettings() {
         viewModelScope.launch {
-            userPreferencesRepository.userPreferencesFlow.collect() {
+            userPreferencesRepository.getUserPreferences().collect() {
                 setState { copy(isShortcutEnabled = it.isShortcutEnabled) }
             }
         }

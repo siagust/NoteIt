@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -202,14 +201,14 @@ fun TopActionButton(
     @DrawableRes iconId: Int,
     onClick: () -> Unit
 ) {
-    Card(
+    Box(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)
-            .size(42.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp,
-        backgroundColor = GrayFill
+            .size(48.dp)
+            .clickable { onClick() }
+            .clip(shape = RoundedCornerShape(12.dp))
+            .background(GrayFill, shape = RoundedCornerShape(12.dp)),
+        contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painterResource(id = iconId),
