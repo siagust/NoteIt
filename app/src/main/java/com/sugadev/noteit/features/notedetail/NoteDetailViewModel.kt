@@ -5,6 +5,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events
+import com.sugadev.noteit.base.analytics.Events.Companion.CLICK_SHARE
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.domain.repository.NoteRepository
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.ClickBulletShortcut
@@ -13,10 +14,12 @@ import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.DismissDeleteConfirmationDialog
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.LoadNote
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Save
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.Share
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.ShowDeleteConfirmationDialog
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateBody
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateTitle
 import com.sugadev.noteit.features.notedetail.NoteDetailEffect.CloseScreen
+import com.sugadev.noteit.features.notedetail.NoteDetailEffect.LaunchShare
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Calendar
 import kotlinx.coroutines.FlowPreview
@@ -188,6 +191,10 @@ class NoteDetailViewModel @Inject constructor(
                 setState {
                     copy(showConfirmationDialog = false)
                 }
+            }
+            Share -> {
+                analyticsManager.trackEvent(CLICK_SHARE, null)
+                setEffect(LaunchShare)
             }
         }
     }

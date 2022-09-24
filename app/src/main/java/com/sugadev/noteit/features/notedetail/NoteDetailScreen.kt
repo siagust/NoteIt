@@ -59,6 +59,7 @@ import com.sugadev.noteit.features.notedetail.NoteDetailAction.ShowDeleteConfirm
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateBody
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.UpdateTitle
 import com.sugadev.noteit.features.notedetail.NoteDetailEffect.CloseScreen
+import com.sugadev.noteit.features.notedetail.NoteDetailEffect.LaunchShare
 import com.sugadev.noteit.ui.component.ConfirmationButton
 import com.sugadev.noteit.ui.component.TopActionButton
 import com.sugadev.noteit.ui.theme.GrayFill
@@ -103,10 +104,12 @@ fun NoteDetailContent(
 
     val focusRequester = remember { FocusRequester() }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
 
     HandleEffect(viewModel = noteDetailViewModel, handle = {
         when (it) {
             CloseScreen -> onDeletePressed()
+            LaunchShare -> launchShareAction(context = context, state = state)
         }
     })
 
@@ -125,7 +128,6 @@ fun NoteDetailContent(
             }
 
             Spacer(modifier = Modifier.weight(1f))
-            val context = LocalContext.current
 
             if (state.note.id != null) {
                 TopActionButton(iconId = R.drawable.ic_share_svgrepo_com) {

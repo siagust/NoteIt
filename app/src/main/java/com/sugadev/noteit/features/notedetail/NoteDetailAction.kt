@@ -12,4 +12,5 @@ sealed interface NoteDetailAction {
     data class ClickClipboardShortcut(val clipboardText: String) : NoteDetailAction
     object ShowDeleteConfirmationDialog : NoteDetailAction
     object DismissDeleteConfirmationDialog : NoteDetailAction
+    object Share : NoteDetailAction
 }
