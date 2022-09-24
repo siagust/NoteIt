@@ -87,7 +87,7 @@ fun NoteDetailContent(
             val launcher =
                 rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult()) {
                     if (Settings.canDrawOverlays(context)) settingsViewModel.setAction(
-                        SettingsAction.UpdateShortcut(isEnabled = true)
+                        SettingsAction.UpdateShortcut(isEnabled = true, isUserAction = true)
                     )
                 }
             val intent = Intent(
@@ -103,17 +103,28 @@ fun NoteDetailContent(
                     onCheckedChange = {
                         settingsViewModel.setAction(
                             SettingsAction.UpdateShortcut(
-                                isEnabled = it
+                                isEnabled = it,
+                                isUserAction = true
                             )
                         )
                     })
             } else {
-                settingsViewModel.setAction(SettingsAction.UpdateShortcut(isEnabled = false))
+                settingsViewModel.setAction(
+                    SettingsAction.UpdateShortcut(
+                        isEnabled = false,
+                        isUserAction = false
+                    )
+                )
                 Switch(
                     modifier = Modifier.weight(1f),
                     checked = state.isShortcutEnabled,
                     onCheckedChange = {
-                        settingsViewModel.setAction(SettingsAction.UpdateShortcut(isEnabled = it))
+                        settingsViewModel.setAction(
+                            SettingsAction.UpdateShortcut(
+                                isEnabled = it,
+                                isUserAction = true
+                            )
+                        )
                         launcher.launch(
                             IntentSenderRequest.Builder(pendingIntent).build()
                         )

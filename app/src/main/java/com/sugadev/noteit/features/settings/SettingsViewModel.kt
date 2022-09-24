@@ -46,7 +46,7 @@ class SettingsViewModel @Inject constructor(
             is UpdateShortcut -> {
                 if (action.isEnabled) {
                     analyticsManager.trackEvent(Events.ENABLE_BUBBLE_SHORTCUT, null)
-                } else {
+                } else if (action.isEnabled.not() && action.isUserAction) {
                     analyticsManager.trackEvent(Events.DISABLE_BUBBLE_SHORTCUT, null)
                 }
                 updateShortcut(action.isEnabled)
