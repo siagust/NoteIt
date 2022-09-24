@@ -20,8 +20,11 @@ import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import androidx.datastore.preferences.core.edit
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.sugadev.noteit.MainActivity
 import com.sugadev.noteit.R
+import com.sugadev.noteit.base.analytics.Events.Companion.CLICK_BUBBLE_SHORTCUT
 import com.sugadev.noteit.local.preference.UserPreferences
 import com.sugadev.noteit.local.preference.UserPreferencesRepository.PreferencesKeys
 import com.sugadev.noteit.local.preference.UserPreferencesRepository.PreferencesKeys.SHORTCUT_POSITION
@@ -213,6 +216,7 @@ class ChatHeadService : Service() {
         val intent = Intent(this@ChatHeadService, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+        Firebase.analytics.logEvent(CLICK_BUBBLE_SHORTCUT, null)
     }
 
     override fun onDestroy() {

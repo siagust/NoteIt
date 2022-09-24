@@ -16,5 +16,9 @@ class Events {
         const val SEARCH_HOME = "SEARCH_HOME"
 
         const val CLICK_SHARE = "CLICK_SHARE"
+
+        const val ENABLE_BUBBLE_SHORTCUT = "ENABLE_BUBBLE_SHORTCUT"
+        const val DISABLE_BUBBLE_SHORTCUT = "DISABLE_BUBBLE_SHORTCUT"
+        const val CLICK_BUBBLE_SHORTCUT = "CLICK_BUBBLE_SHORTCUT"
     }
 }
