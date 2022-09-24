@@ -113,26 +113,19 @@ fun AppScreen() {
                     navController.navigate(
                         Route.NoteDetail.createRoute(it.id ?: 0)
                     )
+                    noteDetailViewModel.setAction(LoadNote(it.id ?: 0))
                 },
-                onSettingsClicked = {
-                    navController.navigate(
-                        Route.Settings.route
-                    )
-                }
+                onSettingsClicked = { navController.navigate(Route.Settings.route) }
             )
         }
-        composable(route = Route.NoteDetail.route,
-            arguments = listOf(
-                navArgument("noteId") {
-                    type = NavType.IntType
-                }
-            )) { navBackStackEntry ->
-            val noteId = navBackStackEntry.arguments?.getInt("noteId")
-            requireNotNull(noteId) { "noteId not found" }
-            noteDetailViewModel.setAction(LoadNote(noteId))
+        composable(
+            route = Route.NoteDetail.route,
+            arguments = listOf(navArgument("noteId") { type = NavType.IntType })
+        ) {
             NoteDetailScreen(
                 noteDetailViewModel = noteDetailViewModel,
-                closeScreen = { navController.navigateUp() })
+                closeScreen = { navController.navigateUp() }
+            )
         }
         composable(Route.Settings.route) {
             SettingsScreen(
