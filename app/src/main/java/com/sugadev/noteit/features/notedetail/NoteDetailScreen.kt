@@ -40,10 +40,8 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -52,6 +50,8 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sugadev.noteit.R
 import com.sugadev.noteit.base.viewmodel.HandleEffect
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.ClickBulletShortcut
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.ClickClipboardShortcut
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.DismissDeleteConfirmationDialog
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Save
@@ -178,9 +178,8 @@ fun NoteDetailContent(
                 .fillMaxWidth()
                 .padding(start = 16.dp, bottom = 16.dp)
         ) {
-            BulletShortcut(state = state, noteDetailViewModel = noteDetailViewModel)
+            BulletShortcut(noteDetailViewModel = noteDetailViewModel)
             ClipboardShortcut(
-                state = state,
                 noteDetailViewModel = noteDetailViewModel,
                 clipboardManager.getText()?.text
             )
@@ -251,31 +250,13 @@ private fun launchShareAction(
 }
 
 @Composable
-fun BulletShortcut(
-    state: NoteDetailState,
-    noteDetailViewModel: NoteDetailViewModel
-) {
+fun BulletShortcut(noteDetailViewModel: NoteDetailViewModel) {
     Box(
         Modifier
             .padding(end = 16.dp)
             .background(GrayFill, shape = RoundedCornerShape(50))
             .clip(shape = RoundedCornerShape(50))
-            .clickable {
-                val insertedText =
-                    state.bodyTextFieldValue.text + if (state.bodyTextFieldValue.text.isBlank()) {
-                        "• "
-                    } else {
-                        "\n• "
-                    }
-                noteDetailViewModel.setAction(
-                    UpdateBody(
-                        TextFieldValue(
-                            text = insertedText,
-                            selection = TextRange(insertedText.length)
-                        )
-                    )
-                )
-            }
+            .clickable { noteDetailViewModel.setAction(ClickBulletShortcut) }
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_list_bullet_svgrepo_com),
@@ -297,25 +278,18 @@ fun BulletShortcut(
 
 @Composable
 fun ClipboardShortcut(
-    state: NoteDetailState,
     noteDetailViewModel: NoteDetailViewModel,
-    copiedText: String?
+    clipboardText: String?
 ) {
-    copiedText?.let {
+    clipboardText?.let {
         Box(
             Modifier
                 .padding(end = 16.dp)
                 .background(GrayFill, shape = RoundedCornerShape(50))
                 .clip(shape = RoundedCornerShape(50))
                 .clickable {
-                    val insertedText = state.bodyTextFieldValue.text + it
                     noteDetailViewModel.setAction(
-                        UpdateBody(
-                            TextFieldValue(
-                                text = insertedText,
-                                selection = TextRange(insertedText.length)
-                            )
-                        )
+                        ClickClipboardShortcut(clipboardText = clipboardText)
                     )
                 }
         ) {

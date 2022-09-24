@@ -7,6 +7,8 @@ import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.domain.repository.NoteRepository
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.ClickBulletShortcut
+import com.sugadev.noteit.features.notedetail.NoteDetailAction.ClickClipboardShortcut
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.DismissDeleteConfirmationDialog
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.LoadNote
@@ -145,6 +147,37 @@ class NoteDetailViewModel @Inject constructor(
                 setState {
                     copy(bodyTextFieldValue = action.textFieldValue, isInitial = false)
                 }
+            }
+            ClickBulletShortcut -> {
+                val insertedBullet =
+                    state.value.bodyTextFieldValue.text + if (state.value.bodyTextFieldValue.text.isBlank()) {
+                        "• "
+                    } else {
+                        "\n• "
+                    }
+                setState {
+                    copy(
+                        bodyTextFieldValue = TextFieldValue(
+                            text = insertedBullet,
+                            selection = TextRange(insertedBullet.length)
+                        )
+                    )
+                }
+                analyticsManager.trackEvent(Events.CLICK_BULLET_SHORTCUT, null)
+            }
+
+            is ClickClipboardShortcut -> {
+                val insertedClipboardText =
+                    state.value.bodyTextFieldValue.text + action.clipboardText
+                setState {
+                    copy(
+                        bodyTextFieldValue = TextFieldValue(
+                            text = insertedClipboardText,
+                            selection = TextRange(insertedClipboardText.length)
+                        )
+                    )
+                }
+                analyticsManager.trackEvent(Events.CLICK_CLIPBOARD_SHORTCUT, null)
             }
             ShowDeleteConfirmationDialog -> {
                 setState {
