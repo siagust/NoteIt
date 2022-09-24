@@ -39,6 +39,7 @@ import com.sugadev.noteit.domain.model.Note
 import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
 import com.sugadev.noteit.features.notedetail.TextFieldDecorationBox
 import com.sugadev.noteit.local.model.DUMMY_NOTES
+import com.sugadev.noteit.ui.component.TopActionButton
 import com.sugadev.noteit.ui.theme.BlackFill
 import com.sugadev.noteit.ui.theme.GrayFill
 import com.sugadev.noteit.ui.theme.Typography
@@ -62,8 +63,7 @@ fun HomeScreen(
         val queryText = state.searchText
         Column {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 8.dp)
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Note!t",
@@ -74,13 +74,9 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Image(
-                    painter = painterResource(id = drawable.ic_setting_svgrepo_com),
-                    contentDescription = "Settings Icon",
-                    modifier = Modifier
-                        .clickable { onSettingsClicked() }
-                        .padding(16.dp)
-                )
+                TopActionButton(iconId = drawable.ic_setting_svgrepo_com) {
+                    onSettingsClicked()
+                }
             }
 
             Row(

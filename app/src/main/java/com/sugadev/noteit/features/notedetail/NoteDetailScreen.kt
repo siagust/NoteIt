@@ -176,7 +176,7 @@ fun NoteDetailContent(
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(start = 16.dp, bottom = 16.dp)
         ) {
             BulletShortcut(state = state, noteDetailViewModel = noteDetailViewModel)
             ClipboardShortcut(
