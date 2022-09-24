@@ -1,4 +1,4 @@
-package com.sugadev.noteit.local.model
+package com.sugadev.noteit.base.local.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

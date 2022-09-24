@@ -29,6 +29,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.sugadev.noteit.base.preference.UserPreferencesRepository
+import com.sugadev.noteit.base.preference.userPreferencesDataStore
 import com.sugadev.noteit.base.service.ChatHeadService
 import com.sugadev.noteit.features.home.HomeScreen
 import com.sugadev.noteit.features.home.HomeViewModel
@@ -37,8 +39,6 @@ import com.sugadev.noteit.features.notedetail.NoteDetailScreen
 import com.sugadev.noteit.features.notedetail.NoteDetailViewModel
 import com.sugadev.noteit.features.settings.SettingsScreen
 import com.sugadev.noteit.features.settings.SettingsViewModel
-import com.sugadev.noteit.local.preference.UserPreferencesRepository
-import com.sugadev.noteit.local.preference.userPreferencesDataStore
 import com.sugadev.noteit.navigation.Route
 import com.sugadev.noteit.ui.theme.NoteItTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -135,8 +135,8 @@ fun AppScreen() {
     }
 }
 
-@Composable
 /// TODO: Replace this functionality using navController
+@Composable
 fun LargeAppScreen() {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val noteDetailViewModel = hiltViewModel<NoteDetailViewModel>()

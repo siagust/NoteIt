@@ -1,9 +1,7 @@
-package com.sugadev.noteit.local
+package com.sugadev.noteit.base.local
 
-import com.sugadev.noteit.domain.model.Note
-import com.sugadev.noteit.domain.repository.NoteRepository
-import com.sugadev.noteit.local.model.NoteDao
-import com.sugadev.noteit.local.model.NoteDb
+import com.sugadev.noteit.base.local.model.NoteDb
+import com.sugadev.noteit.base.model.Note
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -18,8 +16,7 @@ class NoteRepositoryImpl @Inject constructor(
 ) : NoteRepository {
 
     override fun getAllNote(): Flow<List<Note>> {
-        return noteDao
-            .getAllNotes()
+        return noteDao.getAllNotes()
             .distinctUntilChanged()
             .filterNotNull()
             .map {

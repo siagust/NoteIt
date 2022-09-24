@@ -1,6 +1,6 @@
 package com.sugadev.noteit.features.home
 
-import com.sugadev.noteit.domain.model.Note
+import com.sugadev.noteit.base.model.Note
 
 data class HomeState(
     val notes: List<Note>,

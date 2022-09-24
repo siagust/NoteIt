@@ -25,10 +25,10 @@ import com.google.firebase.ktx.Firebase
 import com.sugadev.noteit.MainActivity
 import com.sugadev.noteit.R
 import com.sugadev.noteit.base.analytics.Events.Companion.CLICK_BUBBLE_SHORTCUT
-import com.sugadev.noteit.local.preference.UserPreferences
-import com.sugadev.noteit.local.preference.UserPreferencesRepository.PreferencesKeys
-import com.sugadev.noteit.local.preference.UserPreferencesRepository.PreferencesKeys.SHORTCUT_POSITION
-import com.sugadev.noteit.local.preference.userPreferencesDataStore
+import com.sugadev.noteit.base.model.UserPreferences
+import com.sugadev.noteit.base.preference.UserPreferencesRepository.PreferencesKeys
+import com.sugadev.noteit.base.preference.UserPreferencesRepository.PreferencesKeys.SHORTCUT_POSITION
+import com.sugadev.noteit.base.preference.userPreferencesDataStore
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

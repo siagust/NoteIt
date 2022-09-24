@@ -1,4 +1,4 @@
-package com.sugadev.noteit.domain.model
+package com.sugadev.noteit.base.model
 
 data class Note(
     val id: Int?,

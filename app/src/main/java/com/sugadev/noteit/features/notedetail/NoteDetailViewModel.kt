@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events
 import com.sugadev.noteit.base.analytics.Events.Companion.CLICK_SHARE
+import com.sugadev.noteit.base.local.NoteRepository
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
-import com.sugadev.noteit.domain.repository.NoteRepository
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.ClickBulletShortcut
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.ClickClipboardShortcut
 import com.sugadev.noteit.features.notedetail.NoteDetailAction.Delete
@@ -88,6 +88,7 @@ class NoteDetailViewModel @Inject constructor(
             val isAnyChanges =
                 (state.note.body != state.bodyTextFieldValue.text
                         || state.note.title != state.titleTextFieldValue.text)
+
             if (state.bodyTextFieldValue.text.isNotBlank() &&
                 isAnyChanges
             ) {

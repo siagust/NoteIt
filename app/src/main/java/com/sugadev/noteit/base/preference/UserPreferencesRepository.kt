@@ -1,10 +1,13 @@
-package com.sugadev.noteit.local.preference
+package com.sugadev.noteit.base.preference
 
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import com.sugadev.noteit.base.model.UserPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -15,6 +18,7 @@ class UserPreferencesRepository @Inject constructor(
     companion object PreferencesKeys {
         val SHORTCUT_ENABLED = booleanPreferencesKey("shortcut_enabled")
         val SHORTCUT_POSITION = stringPreferencesKey("shortcut_position")
+        const val USER_PREFERENCES_NAME = "user_preferences"
     }
 
     fun getUserPreferences(): Flow<UserPreferences> {
@@ -31,5 +35,8 @@ class UserPreferencesRepository @Inject constructor(
             preferences[SHORTCUT_ENABLED] = shortcutEnabled
         }
     }
-
 }
+
+val Context.userPreferencesDataStore by preferencesDataStore(
+    name = UserPreferencesRepository.USER_PREFERENCES_NAME
+)

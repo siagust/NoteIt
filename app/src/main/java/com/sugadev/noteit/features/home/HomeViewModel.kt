@@ -5,8 +5,8 @@ import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_EMPTY_NOTE
 import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_NOT_EMPTY_NOTE
 import com.sugadev.noteit.base.analytics.Events.Companion.SEARCH_HOME
+import com.sugadev.noteit.base.local.NoteRepository
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
-import com.sugadev.noteit.domain.repository.NoteRepository
 import com.sugadev.noteit.features.home.HomeAction.LoadNote
 import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
 import com.sugadev.noteit.features.notedetail.NoteDetailEffect
@@ -49,23 +49,27 @@ class HomeViewModel @Inject constructor(
 
     private fun searchNotes() {
         viewModelScope.launch {
-            noteRepository.getAllNotesByQuery(state.value.searchText).collect() {
-                setState { copy(notes = it) }
-            }
+            noteRepository
+                .getAllNotesByQuery(state.value.searchText)
+                .collect {
+                    setState { copy(notes = it) }
+                }
         }
     }
 
 
     private fun getAllNote() {
         viewModelScope.launch {
-            noteRepository.getAllNote().collect() {
-                if (it.isEmpty()) {
-                    analyticsManager.trackEvent(LOAD_HOME_EMPTY_NOTE, null)
-                } else {
-                    analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null)
+            noteRepository
+                .getAllNote()
+                .collect {
+                    if (it.isEmpty()) {
+                        analyticsManager.trackEvent(LOAD_HOME_EMPTY_NOTE, null)
+                    } else {
+                        analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null)
+                    }
+                    setState { copy(notes = it) }
                 }
-                setState { copy(notes = it) }
-            }
         }
     }
 

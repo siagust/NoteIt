@@ -3,11 +3,11 @@ package com.sugadev.noteit.features.settings
 import androidx.lifecycle.viewModelScope
 import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events
+import com.sugadev.noteit.base.preference.UserPreferencesRepository
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.features.notedetail.NoteDetailEffect
 import com.sugadev.noteit.features.settings.SettingsAction.LoadSettings
 import com.sugadev.noteit.features.settings.SettingsAction.UpdateShortcut
-import com.sugadev.noteit.local.preference.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -35,10 +35,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells.Adaptive
 import com.sugadev.noteit.R.drawable
-import com.sugadev.noteit.domain.model.Note
+import com.sugadev.noteit.base.local.model.DUMMY_NOTES
+import com.sugadev.noteit.base.model.Note
 import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
 import com.sugadev.noteit.features.notedetail.TextFieldDecorationBox
-import com.sugadev.noteit.local.model.DUMMY_NOTES
 import com.sugadev.noteit.ui.component.TopActionButton
 import com.sugadev.noteit.ui.theme.BlackFill
 import com.sugadev.noteit.ui.theme.GrayFill

@@ -1,9 +1,10 @@
-package com.sugadev.noteit.local.model
+package com.sugadev.noteit.base.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.sugadev.noteit.base.local.model.NoteDb
 import kotlinx.coroutines.flow.Flow
 
 @Dao

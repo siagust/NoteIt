@@ -1,7 +1,7 @@
 package com.sugadev.noteit.features.notedetail
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.sugadev.noteit.domain.model.Note
+import com.sugadev.noteit.base.model.Note
 
 data class NoteDetailState(
     val note: Note,

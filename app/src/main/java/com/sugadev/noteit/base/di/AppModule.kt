@@ -6,11 +6,11 @@ import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import com.sugadev.noteit.domain.repository.NoteRepository
-import com.sugadev.noteit.local.NoteDatabase
-import com.sugadev.noteit.local.NoteRepositoryImpl
-import com.sugadev.noteit.local.model.NoteDao
-import com.sugadev.noteit.local.preference.userPreferencesDataStore
+import com.sugadev.noteit.base.local.NoteDao
+import com.sugadev.noteit.base.local.NoteDatabase
+import com.sugadev.noteit.base.local.NoteRepository
+import com.sugadev.noteit.base.local.NoteRepositoryImpl
+import com.sugadev.noteit.base.preference.userPreferencesDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

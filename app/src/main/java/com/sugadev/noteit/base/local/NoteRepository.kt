@@ -1,6 +1,6 @@
-package com.sugadev.noteit.domain.repository
+package com.sugadev.noteit.base.local
 
-import com.sugadev.noteit.domain.model.Note
+import com.sugadev.noteit.base.model.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
