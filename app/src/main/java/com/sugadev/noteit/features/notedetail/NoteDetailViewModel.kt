@@ -20,7 +20,7 @@ import java.util.Calendar
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -37,9 +37,9 @@ class NoteDetailViewModel @Inject constructor(
         viewModelScope.launch {
             @OptIn(FlowPreview::class)
             state.debounce(1000)
-                .drop(1)
-                .map { Pair(it.note.title, it.note.body) }
+                .map { Pair(it.titleTextFieldValue.text, it.bodyTextFieldValue.text) }
                 .distinctUntilChangedBy { it }
+                .filter { !state.value.isInitial }
                 .collect {
                     saveNote()
                 }
@@ -79,7 +79,13 @@ class NoteDetailViewModel @Inject constructor(
     private fun saveNote() {
         viewModelScope.launch {
             val state = state.value
-            if (state.bodyTextFieldValue.text.isNotBlank()) {
+            state.bodyTextFieldValue.text.isNotBlank()
+            val isAnyChanges =
+                (state.note.body != state.bodyTextFieldValue.text
+                        || state.note.title != state.titleTextFieldValue.text)
+            if (state.bodyTextFieldValue.text.isNotBlank() &&
+                isAnyChanges
+            ) {
                 noteRepository.insertNote(
                     state.note.copy(
                         body = state.bodyTextFieldValue.text,
@@ -118,6 +124,9 @@ class NoteDetailViewModel @Inject constructor(
     override fun setAction(action: NoteDetailAction) {
         when (action) {
             is LoadNote -> {
+                setState {
+                    copy(isInitial = true)
+                }
                 loadNote(action.id)
             }
             Delete -> {
@@ -129,12 +138,12 @@ class NoteDetailViewModel @Inject constructor(
             }
             is UpdateTitle -> {
                 setState {
-                    copy(titleTextFieldValue = action.textFieldValue)
+                    copy(titleTextFieldValue = action.textFieldValue, isInitial = false)
                 }
             }
             is UpdateBody -> {
                 setState {
-                    copy(bodyTextFieldValue = action.textFieldValue)
+                    copy(bodyTextFieldValue = action.textFieldValue, isInitial = false)
                 }
             }
             ShowDeleteConfirmationDialog -> {

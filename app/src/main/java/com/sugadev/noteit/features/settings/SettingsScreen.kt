@@ -13,7 +13,6 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -34,6 +33,7 @@ import com.sugadev.noteit.ui.theme.Typography
 
 @Composable
 fun SettingsScreen(
+    modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel,
     onBackPressed: () -> Unit
 ) {
@@ -42,7 +42,7 @@ fun SettingsScreen(
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         color = MaterialTheme.colors.background
     ) {
         NoteDetailContent(

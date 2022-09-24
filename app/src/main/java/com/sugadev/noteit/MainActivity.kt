@@ -4,12 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
@@ -35,6 +47,10 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    companion object {
+        const val MIN_LARGE_SCREEN_WIDTH = 585
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -44,7 +60,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    AppScreen()
+                    val smallestScreenWidthDp = LocalConfiguration.current.smallestScreenWidthDp
+                    val isLargeScreen = smallestScreenWidthDp > MIN_LARGE_SCREEN_WIDTH
+
+                    if (isLargeScreen) {
+                        LargeAppScreen()
+                    } else {
+                        AppScreen()
+                    }
                 }
             }
         }
@@ -115,6 +138,56 @@ fun AppScreen() {
             SettingsScreen(
                 settingsViewModel = settingsViewModel,
                 onBackPressed = { navController.navigateUp() })
+        }
+    }
+}
+
+@Composable
+/// TODO: Replace this functionality using navController
+fun LargeAppScreen() {
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val noteDetailViewModel = hiltViewModel<NoteDetailViewModel>()
+    val isOpenNote = remember { mutableStateOf(false) }
+    val isOpenSettings = remember { mutableStateOf(false) }
+    val settingsViewModel = hiltViewModel<SettingsViewModel>()
+
+    Row {
+        HomeScreen(
+            modifier = Modifier.weight(2f),
+            homeViewModel = homeViewModel,
+            onNoteClicked = {
+                noteDetailViewModel.setAction(LoadNote(it.id ?: 0))
+                isOpenSettings.value = false
+                isOpenNote.value = true
+            },
+            onSettingsClicked = {
+                isOpenSettings.value = true
+                isOpenNote.value = false
+            }
+        )
+
+        Spacer(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(start = 8.dp, end = 8.dp)
+                .width(2.dp)
+                .background(color = Color.LightGray)
+        )
+
+        if (isOpenNote.value) {
+            NoteDetailScreen(
+                modifier = Modifier.weight(3f),
+                noteDetailViewModel = noteDetailViewModel,
+                closeScreen = { isOpenNote.value = false }
+            )
+        } else if (isOpenSettings.value) {
+            SettingsScreen(
+                modifier = Modifier.weight(3f),
+                settingsViewModel = settingsViewModel,
+                onBackPressed = { isOpenSettings.value = false }
+            )
+        } else {
+            Box(modifier = Modifier.weight(3f))
         }
     }
 }

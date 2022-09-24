@@ -8,7 +8,8 @@ data class NoteDetailState(
     val isAddNew: Boolean,
     val bodyTextFieldValue: TextFieldValue,
     val titleTextFieldValue: TextFieldValue,
-    val showConfirmationDialog: Boolean
+    val showConfirmationDialog: Boolean,
+    val isInitial: Boolean
 ) {
     companion object {
         val INITIAL =
@@ -17,7 +18,8 @@ data class NoteDetailState(
                 false,
                 TextFieldValue(text = ""),
                 TextFieldValue(text = ""),
-                false
+                showConfirmationDialog = false,
+                isInitial = true
             )
     }
 }
