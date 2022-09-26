@@ -168,7 +168,7 @@ fun NoteDetailContent(
                 TextFieldDecorationBox(
                     typedBody = state.bodyTextFieldValue.text,
                     innerTextField = it,
-                    placeholder = "Body",
+                    placeholder = "Notes",
                     textStyle = Typography.body1
                 )
             },
