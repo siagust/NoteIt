@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-android'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -23,7 +24,36 @@ android {
         }
     }
 
+    applicationVariants.all { variant ->
+        def variantName = variant.getName()
+        def debug = variantName.contains('debug')
+        def appName
+        def appIcon
+        def appIconRound
+
+        if (debug) {
+            appName = app_name_debug
+            appIcon = "@mipmap/ic_launcher_debug"
+            appIconRound = "@mipmap/ic_launcher_debug"
+        } else {
+            appName = app_name_release
+            appIcon = "@mipmap/ic_launcher"
+            appIconRound = "@mipmap/ic_launcher_round"
+        }
+
+        variant.mergedFlavor.manifestPlaceholders = [
+            APP_NAME : appName,
+            APP_ICON : appIcon,
+            APP_ICON_ROUND : appIconRound
+        ]
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -82,4 +112,7 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation "com.google.accompanist:accompanist-permissions:0.26.3-beta"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.26.3-beta"
+
+    implementation platform('com.google.firebase:firebase-bom:30.4.1')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 }
