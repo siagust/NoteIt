@@ -8,15 +8,11 @@ compose by google.
 ## Stack
 
 * UI : [Jetpack compose](https://developer.android.com/jetpack/compose)
-*
-Analytics : [Google Analytics](https://firebase.google.com/docs/analytics/get-started?platform=android)
+* Analytics : [Google Analytics](https://firebase.google.com/docs/analytics/get-started?platform=android)
 * Persistence : [Room](https://developer.android.com/training/data-storage/room)
-* Local
-  Preferences : [Jetpack DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
-* Remote
-  Config : [Firebase Remote Config](https://firebase.google.com/docs/remote-config/get-started?platform=android)
-* Additional library : [Accompanist](https://google.github.io/accompanist/systemuicontroller/)
-  | [LazyStaggeredGrid](https://github.com/nesyou01/LazyStaggeredGrid)
+* Local Preferences : [Jetpack DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+* Remote Config : [Firebase Remote Config](https://firebase.google.com/docs/remote-config/get-started?platform=android)
+* Additional library : [Accompanist](https://google.github.io/accompanist/systemuicontroller/) | [LazyStaggeredGrid](https://github.com/nesyou01/LazyStaggeredGrid)
 
 ## App Preview
 
