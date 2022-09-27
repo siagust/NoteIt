@@ -1,6 +1,6 @@
 # NoteIt
 
-<a href='https://play.google.com/store/apps/details?id=com.sugadev.noteit'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width=180/>
+<a href='https://play.google.com/store/apps/details?id=com.sugadev.noteit'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width=180/></a>
 
 Simple note taking app using jetpack compose. This repository for learning purpose of new jetpack
 compose by google.
