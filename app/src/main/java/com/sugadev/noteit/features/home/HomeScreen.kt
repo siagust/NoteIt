@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells.Adaptive
 import com.sugadev.noteit.R.drawable
+import com.sugadev.noteit.base.config.model.AddNotesPlaceholder
 import com.sugadev.noteit.base.local.model.DUMMY_NOTES
 import com.sugadev.noteit.base.model.Note
 import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
@@ -61,6 +62,7 @@ fun HomeScreen(
     ) {
         val notes = state.notes
         val queryText = state.searchText
+        val addNotesPlaceholder = state.addNotesPlaceholder
         Column {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -115,7 +117,7 @@ fun HomeScreen(
                 }
             }
 
-            HomeContent(modifier, notes, queryText) { onNoteClicked(it) }
+            HomeContent(modifier, addNotesPlaceholder, notes, queryText) { onNoteClicked(it) }
         }
     }
 }
@@ -123,6 +125,7 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
+    addNotesPlaceholder: AddNotesPlaceholder,
     notes: List<Note>,
     queryText: String,
     onClick: (Note) -> Unit,
@@ -133,7 +136,10 @@ fun HomeContent(
             contentPadding = PaddingValues(8.dp)
         ) {
             item {
-                AddNewNotes {
+                AddNewNotes(
+                    title = addNotesPlaceholder.title.id,
+                    desc = addNotesPlaceholder.desc.id
+                ) {
                     onClick(
                         Note(
                             0,
@@ -242,6 +248,8 @@ fun NotesText(
 
 @Composable
 fun AddNewNotes(
+    title: String,
+    desc: String,
     onClick: () -> Unit
 ) {
     Column(
@@ -252,14 +260,14 @@ fun AddNewNotes(
             .clip(shape = RoundedCornerShape(16.dp))
             .clickable { onClick.invoke() }
     ) {
-        AddNewText("Add meaning title here", "Add marvelous detail for your notes")
+        AddNewText(title = title, desc = desc)
     }
 }
 
 @Composable
 fun AddNewText(
     title: String,
-    body: String
+    desc: String
 ) {
     val textColor = WhiteFill
     Text(
@@ -269,7 +277,7 @@ fun AddNewText(
         style = Typography.subtitle1
     )
     Text(
-        text = body,
+        text = desc,
         color = textColor,
         modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 16.dp),
         style = Typography.body2

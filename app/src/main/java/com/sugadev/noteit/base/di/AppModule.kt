@@ -6,6 +6,8 @@ import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
 import com.sugadev.noteit.base.local.NoteDao
 import com.sugadev.noteit.base.local.NoteDatabase
 import com.sugadev.noteit.base.local.NoteRepository
@@ -45,5 +47,14 @@ class AppModule {
     fun provideUserPreferencesDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return context.userPreferencesDataStore
     }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
+        return FirebaseRemoteConfig.getInstance()
+    }
+
+    @Provides
+    fun provideGson(): Gson = Gson()
 
 }

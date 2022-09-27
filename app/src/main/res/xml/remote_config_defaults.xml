@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaults>
+    <entry>
+        <key>FEATURE_ADD_NOTES_PLACEHOLDER</key>
+        <value>{ "title": { "en": "Add meaning title here", "id": "asdfasdf" }, "desc": { "en": "Add
+            marvelous detail for your notes", "id": "Tulis aja dulu" } }
+        </value>
+    </entry>
+</defaults>

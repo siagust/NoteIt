@@ -5,6 +5,7 @@ import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_EMPTY_NOTE
 import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_NOT_EMPTY_NOTE
 import com.sugadev.noteit.base.analytics.Events.Companion.SEARCH_HOME
+import com.sugadev.noteit.base.config.RemoteConfigImpl
 import com.sugadev.noteit.base.local.NoteRepository
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.features.home.HomeAction.LoadNote
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val noteRepository: NoteRepository,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
+    private val remoteConfigImpl: RemoteConfigImpl
 ) :
     BaseViewModel<HomeState, HomeAction, NoteDetailEffect>(HomeState.INITIAL) {
 
@@ -68,7 +70,8 @@ class HomeViewModel @Inject constructor(
                     } else {
                         analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null)
                     }
-                    setState { copy(notes = it) }
+                    val addNotesPlaceholder = remoteConfigImpl.getAddNotesPlaceholder()
+                    setState { copy(notes = it, addNotesPlaceholder = addNotesPlaceholder) }
                 }
         }
     }
