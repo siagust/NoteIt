@@ -154,7 +154,10 @@ class NoteDetailViewModel @Inject constructor(
             }
             ClickBulletShortcut -> {
                 val insertedBullet =
-                    state.value.bodyTextFieldValue.text + if (state.value.bodyTextFieldValue.text.isBlank()) {
+                    state.value.bodyTextFieldValue.text + if (state.value.bodyTextFieldValue.text.isBlank() || state.value.bodyTextFieldValue.text.endsWith(
+                            "\n"
+                        )
+                    ) {
                         "• "
                     } else {
                         "\n• "
