@@ -2,6 +2,7 @@ package com.sugadev.noteit
 
 import app.cash.turbine.test
 import com.sugadev.noteit.base.analytics.AnalyticsManager
+import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_EMPTY_NOTE
 import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_NOT_EMPTY_NOTE
 import com.sugadev.noteit.base.config.RemoteConfig
 import com.sugadev.noteit.base.config.model.AddNotesPlaceholder
@@ -43,7 +44,7 @@ class HomeViewModelTest : BaseViewModelTest() {
     fun `Init viewmodel and notes not empty should return result`() = runTest {
         every { analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null) } answers {}
 
-        homeViewModel = HomeViewModel(EmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
+        homeViewModel = HomeViewModel(NotEmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
 
         homeViewModel.state.test {
             verify { analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null) }
@@ -52,6 +53,31 @@ class HomeViewModelTest : BaseViewModelTest() {
 
             Assert.assertEquals(
                 listOf(Note.EMPTY),
+                state.notes
+            )
+
+            Assert.assertEquals(
+                AddNotesPlaceholder.DEFAULT,
+                state.addNotesPlaceholder
+            )
+
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `Init viewmodel and notes empty should return empty`() = runTest {
+        every { analyticsManager.trackEvent(LOAD_HOME_EMPTY_NOTE, null) } answers {}
+
+        homeViewModel = HomeViewModel(EmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
+
+        homeViewModel.state.test {
+            verify { analyticsManager.trackEvent(LOAD_HOME_EMPTY_NOTE, null) }
+
+            val state = awaitItem()
+
+            Assert.assertEquals(
+                listOf<Note>(),
                 state.notes
             )
 
@@ -81,9 +107,32 @@ class HomeViewModelTest : BaseViewModelTest() {
     }
 }
 
-class EmptyNoteRepositoryImpl : NoteRepository {
+class NotEmptyNoteRepositoryImpl : NoteRepository {
     override fun getAllNote(): Flow<List<Note>> {
         return flowOf(listOf(Note.EMPTY))
+    }
+
+    override fun getNoteById(id: Int): Flow<Note> {
+        return flowOf()
+    }
+
+    override fun insertNote(note: Note): Flow<Long> {
+        return flowOf()
+    }
+
+    override fun getAllNotesByQuery(query: String): Flow<List<Note>> {
+        return flowOf()
+    }
+
+    override fun removeNote(id: Int): Flow<Unit> {
+        return flowOf()
+    }
+
+}
+
+class EmptyNoteRepositoryImpl : NoteRepository {
+    override fun getAllNote(): Flow<List<Note>> {
+        return flowOf(listOf())
     }
 
     override fun getNoteById(id: Int): Flow<Note> {

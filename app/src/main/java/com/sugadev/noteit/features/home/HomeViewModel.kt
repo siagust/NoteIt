@@ -8,7 +8,6 @@ import com.sugadev.noteit.base.analytics.Events.Companion.SEARCH_HOME
 import com.sugadev.noteit.base.config.RemoteConfig
 import com.sugadev.noteit.base.local.NoteRepository
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
-import com.sugadev.noteit.features.home.HomeAction.LoadNote
 import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
 import com.sugadev.noteit.features.notedetail.NoteDetailEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -78,9 +77,6 @@ class HomeViewModel @Inject constructor(
 
     override fun setAction(action: HomeAction) {
         when (action) {
-            is LoadNote -> {
-                getAllNote()
-            }
             is UpdateSearchText -> {
                 viewModelScope.launch {
                     setState { copy(searchText = action.text) }
