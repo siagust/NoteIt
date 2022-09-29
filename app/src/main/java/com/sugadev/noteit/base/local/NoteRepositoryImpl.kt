@@ -1,7 +1,9 @@
 package com.sugadev.noteit.base.local
 
+import com.sugadev.noteit.base.di.DiName
 import com.sugadev.noteit.base.local.model.NoteDb
 import com.sugadev.noteit.base.model.Note
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -10,8 +12,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Named
 
 class NoteRepositoryImpl @Inject constructor(
+    @Named(DiName.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
     private val noteDao: NoteDao
 ) : NoteRepository {
 
@@ -29,7 +33,7 @@ class NoteRepositoryImpl @Inject constructor(
                     )
                 }
             }
-            .flowOn(Dispatchers.IO)
+            .flowOn(dispatcher)
     }
 
     override fun getNoteById(id: Int): Flow<Note> {
@@ -56,11 +60,11 @@ class NoteRepositoryImpl @Inject constructor(
                 )
             )
         )
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun removeNote(id: Int) = flow {
         emit(noteDao.removeNote(id))
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun getAllNotesByQuery(query: String): Flow<List<Note>> {
         return noteDao.getAllNotesByQuery(query)
@@ -75,7 +79,7 @@ class NoteRepositoryImpl @Inject constructor(
                     )
                 }
             }
-            .flowOn(Dispatchers.IO)
+            .flowOn(dispatcher)
     }
 
 }

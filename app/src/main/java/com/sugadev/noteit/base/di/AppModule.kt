@@ -8,6 +8,11 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
+import com.sugadev.noteit.base.analytics.AnalyticsManager
+import com.sugadev.noteit.base.analytics.AnalyticsManagerImpl
+import com.sugadev.noteit.base.analytics.firebase.FirebaseAnalyticsClient
+import com.sugadev.noteit.base.config.RemoteConfig
+import com.sugadev.noteit.base.config.RemoteConfigImpl
 import com.sugadev.noteit.base.local.NoteDao
 import com.sugadev.noteit.base.local.NoteDatabase
 import com.sugadev.noteit.base.local.NoteRepository
@@ -18,6 +23,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -34,12 +42,23 @@ class AppModule {
 
     @Provides
     fun provideNoteRepository(noteDao: NoteDao): NoteRepository =
-        NoteRepositoryImpl(noteDao = noteDao)
+        NoteRepositoryImpl(noteDao = noteDao, dispatcher = provideDispatcherIo())
 
-    @Singleton
     @Provides
     fun provideFirebaseAnalytic(): FirebaseAnalytics {
         return Firebase.analytics
+    }
+
+    @Provides
+    @Named(DiName.DISPATCHER_IO)
+    fun provideDispatcherIo(): CoroutineDispatcher {
+        return Dispatchers.IO
+    }
+
+    @Singleton
+    @Provides
+    fun provideAnalyticsManager(): AnalyticsManager {
+        return AnalyticsManagerImpl(FirebaseAnalyticsClient(provideFirebaseAnalytic()))
     }
 
     @Singleton
@@ -50,8 +69,8 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
-        return FirebaseRemoteConfig.getInstance()
+    fun provideRemoteConfig(): RemoteConfig {
+        return RemoteConfigImpl(FirebaseRemoteConfig.getInstance(), gson = provideGson())
     }
 
     @Provides

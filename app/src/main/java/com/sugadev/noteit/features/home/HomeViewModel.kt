@@ -5,7 +5,7 @@ import com.sugadev.noteit.base.analytics.AnalyticsManager
 import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_EMPTY_NOTE
 import com.sugadev.noteit.base.analytics.Events.Companion.LOAD_HOME_NOT_EMPTY_NOTE
 import com.sugadev.noteit.base.analytics.Events.Companion.SEARCH_HOME
-import com.sugadev.noteit.base.config.RemoteConfigImpl
+import com.sugadev.noteit.base.config.RemoteConfig
 import com.sugadev.noteit.base.local.NoteRepository
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.features.home.HomeAction.LoadNote
@@ -23,14 +23,14 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val noteRepository: NoteRepository,
     private val analyticsManager: AnalyticsManager,
-    private val remoteConfigImpl: RemoteConfigImpl
+    private val remoteConfig: RemoteConfig
 ) :
     BaseViewModel<HomeState, HomeAction, NoteDetailEffect>(HomeState.INITIAL) {
 
-    init {
-        initSearchTextListener()
-        getAllNote()
-    }
+//    init {
+//        initSearchTextListener()
+//        getAllNote()
+//    }
 
     private fun initSearchTextListener() {
         viewModelScope.launch {
@@ -70,7 +70,7 @@ class HomeViewModel @Inject constructor(
                     } else {
                         analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null)
                     }
-                    val addNotesPlaceholder = remoteConfigImpl.getAddNotesPlaceholder()
+                    val addNotesPlaceholder = remoteConfig.getAddNotesPlaceholder()
                     setState { copy(notes = it, addNotesPlaceholder = addNotesPlaceholder) }
                 }
         }
@@ -82,7 +82,9 @@ class HomeViewModel @Inject constructor(
                 getAllNote()
             }
             is UpdateSearchText -> {
-                setState { copy(searchText = action.text) }
+                viewModelScope.launch {
+                    setState { copy(searchText = action.text) }
+                }
             }
         }
     }

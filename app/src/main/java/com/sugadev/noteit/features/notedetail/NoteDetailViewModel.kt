@@ -3,7 +3,7 @@ package com.sugadev.noteit.features.notedetail
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
-import com.sugadev.noteit.base.analytics.AnalyticsManager
+import com.sugadev.noteit.base.analytics.AnalyticsManagerImpl
 import com.sugadev.noteit.base.analytics.Events
 import com.sugadev.noteit.base.analytics.Events.Companion.CLICK_SHARE
 import com.sugadev.noteit.base.local.NoteRepository
@@ -34,7 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteDetailViewModel @Inject constructor(
     private val noteRepository: NoteRepository,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManagerImpl
 ) :
     BaseViewModel<NoteDetailState, NoteDetailAction, NoteDetailEffect>(NoteDetailState.INITIAL) {
 

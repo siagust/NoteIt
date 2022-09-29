@@ -1,6 +1,5 @@
 package com.sugadev.noteit.base.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,6 @@ abstract class BaseViewModel<STATE, ACTION, EFFECT>(
     abstract fun setAction(action: ACTION)
 
     protected fun setState(newState: STATE.() -> STATE) {
-        Log.d("SetState", "${newState.javaClass}")
         _state.update(newState)
     }
 
