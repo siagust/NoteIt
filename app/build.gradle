@@ -8,6 +8,16 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
+apply from: "$rootDir/gradle/test-report.gradle"
+
+ext.codeCoverage = [
+    enabled      : true,
+    fileBlackList: [
+    ],
+    fileWhiteList: [
+    ]
+]
+
 android {
     compileSdk 33
 

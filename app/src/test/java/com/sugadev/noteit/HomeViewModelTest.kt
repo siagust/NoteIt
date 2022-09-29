@@ -7,7 +7,7 @@ import com.sugadev.noteit.base.config.RemoteConfig
 import com.sugadev.noteit.base.config.model.AddNotesPlaceholder
 import com.sugadev.noteit.base.local.NoteRepository
 import com.sugadev.noteit.base.model.Note
-import com.sugadev.noteit.features.home.HomeAction.LoadNote
+import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
 import com.sugadev.noteit.features.home.HomeViewModel
 import io.mockk.every
 import io.mockk.mockk
@@ -40,25 +40,40 @@ class HomeViewModelTest : BaseViewModelTest() {
 
 
     @Test
-    fun `Load home and return not empty result`() = runTest {
-        homeViewModel = HomeViewModel(EmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
-
+    fun `Init viewmodel and notes not empty should return result`() = runTest {
         every { analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null) } answers {}
 
-        homeViewModel.setAction(LoadNote)
+        homeViewModel = HomeViewModel(EmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
 
         homeViewModel.state.test {
             verify { analyticsManager.trackEvent(LOAD_HOME_NOT_EMPTY_NOTE, null) }
 
             val state = awaitItem()
+
+            Assert.assertEquals(
+                listOf(Note.EMPTY),
+                state.notes
+            )
+
             Assert.assertEquals(
                 AddNotesPlaceholder.DEFAULT,
                 state.addNotesPlaceholder
             )
 
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `Update search text and update state`() = runTest {
+        homeViewModel = HomeViewModel(EmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
+
+        homeViewModel.setAction(UpdateSearchText("Dummy Text"))
+
+        homeViewModel.state.test {
             Assert.assertEquals(
-                listOf(Note.EMPTY),
-                state.notes
+                "Dummy Text",
+                awaitItem().searchText
             )
 
             cancelAndConsumeRemainingEvents()

@@ -13,9 +13,9 @@ import com.sugadev.noteit.features.home.HomeAction.UpdateSearchText
 import com.sugadev.noteit.features.notedetail.NoteDetailEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,15 +27,15 @@ class HomeViewModel @Inject constructor(
 ) :
     BaseViewModel<HomeState, HomeAction, NoteDetailEffect>(HomeState.INITIAL) {
 
-//    init {
-//        initSearchTextListener()
-//        getAllNote()
-//    }
+    init {
+        initSearchTextListener()
+        getAllNote()
+    }
 
     private fun initSearchTextListener() {
         viewModelScope.launch {
             @OptIn(FlowPreview::class)
-            state.sample(1000)
+            state.debounce(1000)
                 .drop(1)
                 .distinctUntilChangedBy { it.searchText }
                 .collect {
