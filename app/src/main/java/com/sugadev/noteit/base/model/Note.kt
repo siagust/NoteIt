@@ -8,5 +8,6 @@ data class Note(
 ) {
     companion object {
         val EMPTY = Note(null, null, null, null)
+        val EXIST = Note(2, "Title exist", "Body exist", 1L)
     }
 }
