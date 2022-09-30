@@ -15,6 +15,7 @@ ext.codeCoverage = [
     fileBlackList: [
     ],
     fileWhiteList: [
+        '**/features/**/*ViewModel*'
     ]
 ]
 
