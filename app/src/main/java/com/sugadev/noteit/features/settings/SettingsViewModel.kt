@@ -6,7 +6,6 @@ import com.sugadev.noteit.base.analytics.Events
 import com.sugadev.noteit.base.preference.UserPreferencesRepository
 import com.sugadev.noteit.base.viewmodel.BaseViewModel
 import com.sugadev.noteit.features.notedetail.NoteDetailEffect
-import com.sugadev.noteit.features.settings.SettingsAction.LoadSettings
 import com.sugadev.noteit.features.settings.SettingsAction.UpdateShortcut
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -35,14 +34,12 @@ class SettingsViewModel @Inject constructor(
     private fun updateShortcut(shortcutEnabled: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.updateShortcut(shortcutEnabled)
+            setState { copy(isShortcutEnabled = shortcutEnabled) }
         }
     }
 
     override fun setAction(action: SettingsAction) {
         when (action) {
-            is LoadSettings -> {
-                loadSettings()
-            }
             is UpdateShortcut -> {
                 if (action.isEnabled) {
                     analyticsManager.trackEvent(Events.ENABLE_BUBBLE_SHORTCUT, null)
