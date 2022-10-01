@@ -52,7 +52,7 @@ class HomeViewModelTest : BaseViewModelTest() {
             val state = awaitItem()
 
             Assert.assertEquals(
-                listOf(Note.EMPTY),
+                listOf(Note.EXIST),
                 state.notes
             )
 
@@ -92,24 +92,75 @@ class HomeViewModelTest : BaseViewModelTest() {
 
     @Test
     fun `Update search text and update state`() = runTest {
-        homeViewModel = HomeViewModel(EmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
+        every { analyticsManager.trackEvent(any(), any()) } answers {}
+
+        homeViewModel = HomeViewModel(NotEmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
 
         homeViewModel.setAction(UpdateSearchText("Dummy Text"))
 
         homeViewModel.state.test {
+            val state = awaitItem()
+
             Assert.assertEquals(
                 "Dummy Text",
-                awaitItem().searchText
+                state.searchText
+            )
+
+            homeViewModel.setAction(UpdateSearchText("Dummy Text 2"))
+            val state1 = awaitItem()
+
+            Assert.assertEquals(
+                "Dummy Text 2",
+                state1.searchText
+            )
+
+            Assert.assertEquals(
+                listOf(Note.EXIST),
+                state1.notes
             )
 
             cancelAndConsumeRemainingEvents()
         }
     }
+
+    @Test
+    fun `Update search text empty and update state`() = runTest {
+        every { analyticsManager.trackEvent(any(), any()) } answers {}
+
+        homeViewModel = HomeViewModel(NotEmptyNoteRepositoryImpl(), analyticsManager, remoteConfig)
+
+        homeViewModel.setAction(UpdateSearchText("Dummy Text"))
+
+        homeViewModel.state.test {
+            val state = awaitItem()
+
+            Assert.assertEquals(
+                "Dummy Text",
+                state.searchText
+            )
+
+            homeViewModel.setAction(UpdateSearchText(""))
+            val stateQueryEmpty = awaitItem()
+
+            Assert.assertEquals(
+                "",
+                stateQueryEmpty.searchText
+            )
+
+            Assert.assertEquals(
+                listOf<Note>(Note.EXIST),
+                stateQueryEmpty.notes
+            )
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }
+
 
 class NotEmptyNoteRepositoryImpl : NoteRepository {
     override fun getAllNote(): Flow<List<Note>> {
-        return flowOf(listOf(Note.EMPTY))
+        return flowOf(listOf(Note.EXIST))
     }
 
     override fun getNoteById(id: Int): Flow<Note> {
@@ -121,7 +172,7 @@ class NotEmptyNoteRepositoryImpl : NoteRepository {
     }
 
     override fun getAllNotesByQuery(query: String): Flow<List<Note>> {
-        return flowOf()
+        return flowOf(listOf(Note.EXIST))
     }
 
     override fun removeNote(id: Int): Flow<Unit> {

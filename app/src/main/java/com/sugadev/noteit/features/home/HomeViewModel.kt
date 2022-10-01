@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
                 .drop(1)
                 .distinctUntilChangedBy { it.searchText }
                 .collect {
-                    if (it.searchText.isNullOrBlank()) {
+                    if (it.searchText.isBlank()) {
                         getAllNote()
                     } else {
                         searchNotes()
@@ -78,9 +78,7 @@ class HomeViewModel @Inject constructor(
     override fun setAction(action: HomeAction) {
         when (action) {
             is UpdateSearchText -> {
-                viewModelScope.launch {
-                    setState { copy(searchText = action.text) }
-                }
+                setState { copy(searchText = action.text) }
             }
         }
     }
